@@ -1,0 +1,91 @@
+<web-app id="WebApp_ID" version="2.4"
+         xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+   http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+    <!--сервлет для примера3-->
+    <servlet>
+        <servlet-name>pageSample3</servlet-name>
+        <jsp-file>/WEB-INF/jsp/sample3.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>pageSample3</servlet-name>
+        <url-pattern>/sample3</url-pattern>
+    </servlet-mapping>
+
+    <!--Сервлет для 4  примера-->
+    <servlet>
+        <servlet-name>Controller</servlet-name>
+        <servlet-class>com.htp.controller.Controller</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Controller</servlet-name>
+        <url-pattern>/controller</url-pattern>
+    </servlet-mapping>
+
+
+    <!--Сервлет для  5 примера-->
+<!--    <servlet>-->
+<!--        <servlet-name>Controller5</servlet-name>-->
+<!--        <servlet-class>com.htp.controller.Controller5</servlet-class>-->
+<!--    </servlet>-->
+<!--    <servlet-mapping>-->
+<!--        <servlet-name>Controller5</servlet-name>-->
+<!--        <url-pattern>/controller5</url-pattern>-->
+<!--    </servlet-mapping>-->
+
+
+
+    <!--Сервлет для  6 примера (страница с кнопкой)-->
+    <servlet>
+        <servlet-name>sample6page</servlet-name>
+        <jsp-file>/WEB-INF/jsp/sample6.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>sample6page</servlet-name>
+        <url-pattern>/sample6</url-pattern>
+    </servlet-mapping>
+
+    <!--Сервлет для 6 примера (кнопка)-->
+    <servlet>
+        <servlet-name>Controller6</servlet-name>
+        <servlet-class>com.htp.controller.Controller6</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Controller6</servlet-name>
+        <url-pattern>/controller6</url-pattern>
+    </servlet-mapping>
+
+    <!--    Сервлет для баловства-->
+    <servlet>
+        <servlet-name>inputController</servlet-name>
+        <servlet-class>com.htp.controller.InputController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>inputController</servlet-name>
+        <url-pattern>/inputController</url-pattern>
+    </servlet-mapping>
+
+    <!-- Сервлет страницы для баловства с базой данных-->
+    <servlet>
+        <servlet-name>tessDBPage</servlet-name>
+        <jsp-file>/WEB-INF/jsp/testDB.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>tessDBPage</servlet-name>
+        <url-pattern>/testDB</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Сервлет страницы для баловства с базой данных-->
+     <servlet>
+         <servlet-name>testDbController</servlet-name>
+         <servlet-class>com.htp.controller.TestDbController</servlet-class>
+     </servlet>
+    <servlet-mapping>
+        <servlet-name>testDbController</servlet-name>
+        <url-pattern>/testDBcontrol</url-pattern>
+    </servlet-mapping>
+
+</web-app>
