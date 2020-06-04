@@ -1,55 +1,88 @@
 package com.htp.domain;
 
 import java.sql.Date;
-/** Класс для описания структуры таблицы m_Users */
+import java.util.Objects;
+
+/**
+ * Класс для описания структуры таблицы m_Users
+ */
 public class User {
 
-  private long id;
-  private String login;
-  private String name;
-  private Date birthDate;
-  private String password;
+	private long id;
+	private String login;
+	private String name;
+	private Date birthDate;
+	private String password;
 
-  // Constructor
-  public User() {}
+	// Constructor
+	public User() {
+	}
 
-  public long getId() {
-    return id;
-  }
+	public long getId() {
+		return id;
+	}
 
-  public void setId(long id) {
-    this.id = id;
-  }
+	public void setId(long id) {
+		this.id = id;
+	}
 
-  public String getLogin() {
-    return login;
-  }
+	public String getLogin() {
+		return login;
+	}
 
-  public void setLogin(String login) {
-    this.login = login;
-  }
+	public void setLogin(String login) {
+		this.login = login;
+	}
 
-  public String getName() {
-    return name;
-  }
+	public String getName() {
+		return name;
+	}
 
-  public void setName(String name) {
-    this.name = name;
-  }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-  public Date getBirthDate() {
-    return birthDate;
-  }
+	public Date getBirthDate() {
+		return birthDate;
+	}
 
-  public void setBirthDate(Date birthDate) {
-    this.birthDate = birthDate;
-  }
+	public void setBirthDate(Date birthDate) {
+		this.birthDate = birthDate;
+	}
 
-  public String getPassword() {
-    return password;
-  }
+	public String getPassword() {
+		return password;
+	}
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, login, name, birthDate, login, password);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null || getClass() != obj.getClass()) return false;
+		User user = (User) obj;
+		return Objects.equals(id, user.id) &&
+				Objects.equals(login, user.login) &&
+				Objects.equals(name, user.name) &&
+				Objects.equals(birthDate, user.birthDate) &&
+				Objects.equals(password, user.password);
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"id=" + id +
+				", login='" + login + '\'' +
+				", name='" + name + '\'' +
+				", birthDate=" + birthDate +
+				", password='" + password + '\'' +
+				'}';
+	}
 }
