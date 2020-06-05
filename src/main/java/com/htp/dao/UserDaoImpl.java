@@ -3,7 +3,9 @@ package com.htp.dao;
 import com.htp.domain.User;
 import com.htp.exceptions.ResourceNotFoundException;
 import com.htp.util.DatabaseConfiguration;
+import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +13,8 @@ import java.util.Optional;
 
 import static com.htp.util.DatabaseConfiguration.*;
 
+//Аннотация указывает спрингу, что класс применяется для доступа к базе данных (DAO)
+@Repository
 public class UserDaoImpl implements UserDao {
 	//Наименования колонок в таблице m_user
 	public static final String USER_ID = "id";
@@ -21,25 +25,19 @@ public class UserDaoImpl implements UserDao {
 
 	public static DatabaseConfiguration databaseConfig = DatabaseConfiguration.getInstance();
 
+	private DataSource dataSource;
+
+	public UserDaoImpl(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+
 	@Override
 	public List<User> findAll() {
-		String driverName = databaseConfig.getProperty(DATABASE_DRIVER_NAME);
-		String url = databaseConfig.getProperty(DATABASE_URL);
-		String user = databaseConfig.getProperty(DATABASE_LOGIN);
-		String password = databaseConfig.getProperty(DATABASE_PASSWORD);
-
-		final String findAllQuery = " select * from m_users order by id desc";
+		final String findAllQuery = "select * from m_users order by id desc";
 		List<User> listUsers = new ArrayList<>();
 		ResultSet resultSet = null;
 
-		//1. Загрузка драйвера
-		try {
-			Class.forName(driverName);
-		} catch (ClassNotFoundException e) {
-			System.out.println("Can't load database driver " + driverName);
-		}
-		//2. Устанавливаем соединение
-		try (Connection connection = DriverManager.getConnection(url, user, password);
+		try (Connection connection = dataSource.getConnection();
 		     //3. Готовим выражение
 		     PreparedStatement preparedStatement = connection.prepareStatement(findAllQuery)
 		) {
@@ -51,8 +49,8 @@ public class UserDaoImpl implements UserDao {
 			}
 		} catch (SQLException e) {
 			System.out.println("Error" + this.getClass().getName() + ":" + e.getMessage()); // e.printStackTrace();
-		}finally {
-			if(resultSet != null) {
+		} finally {
+			if (resultSet != null) {
 				try {
 					resultSet.close();
 				} catch (SQLException throwables) {
@@ -65,26 +63,14 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public List<User> search(String paramSearch) {
-		//database configuration
-		String driverName = databaseConfig.getProperty(DATABASE_DRIVER_NAME);
-		String url = databaseConfig.getProperty(DATABASE_URL);
-		String login = databaseConfig.getProperty(DATABASE_LOGIN);
-		String password = databaseConfig.getProperty(DATABASE_PASSWORD);
-		//search expression
 		final String searchQuery = "select * from m_users where id > ? order by id desc";
 		//лист для хранения результата поиска
 		List<User> resultList = new ArrayList<>();
 		//сет для получения результата выборки
 		ResultSet resultSet = null;
 
-		//Loading driver
-		try {
-			Class.forName(driverName);
-		} catch (ClassNotFoundException e) {
-			System.out.println("Can't load database driver " + driverName);
-		}
 		try (   //Устанавливаем соединение
-		        Connection connection = DriverManager.getConnection(url, login, password);
+		        Connection connection = dataSource.getConnection();
 		        PreparedStatement preparedStatement = connection.prepareStatement(searchQuery);
 		) {
 			//Готовим выражение
@@ -114,24 +100,14 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public User findOne(long userID) {
-		//database configuration
-		String driverName = databaseConfig.getProperty(DATABASE_DRIVER_NAME);
-		String url = databaseConfig.getProperty(DATABASE_URL);
-		String login = databaseConfig.getProperty(DATABASE_LOGIN);
-		String password = databaseConfig.getProperty(DATABASE_PASSWORD);
 		//search expression
 		final String searchByIDQuery = "select * from m_users where id = ? order by id desc";
 		//Result
 		User returnUser = null;
 		//ResultSet
 		ResultSet resultSet = null;
-		try {
-			Class.forName(driverName);
-		} catch (ClassNotFoundException e) {
-			System.out.println("Can't load database driver " + driverName);
-		}
 		try (
-				Connection connection = DriverManager.getConnection(url, login, password);
+				Connection connection = dataSource.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(searchByIDQuery);
 		) {
 			preparedStatement.setLong(1, userID);
@@ -158,19 +134,8 @@ public class UserDaoImpl implements UserDao {
 	public User save(User user) {
 		final String saveQuery = "insert into m_users ( login, name, birth_date, password) values ?, ?, ?, ?, ?";
 		final String getLastInsertId = "select currval('m_users_id_seq')";
-
-		String driverName = databaseConfig.getProperty(DATABASE_DRIVER_NAME);
-		String url = databaseConfig.getProperty(DATABASE_URL);
-		String login = databaseConfig.getProperty(DATABASE_LOGIN);
-		String password = databaseConfig.getProperty(DATABASE_PASSWORD);
-		try {
-			Class.forName(driverName);
-		} catch (ClassNotFoundException e) {
-			System.out.println("Can't load database driver " + driverName);
-		}
-
 		ResultSet resultSet = null;
-		try (Connection connection = DriverManager.getConnection(url, login, password);
+		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement insertStatement = connection.prepareStatement(saveQuery);
 		     PreparedStatement getLastIdStatement = connection.prepareStatement(getLastInsertId);
 		) {
@@ -200,17 +165,7 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public User update(User user) {
 		final String updateQuery = "update m_users set login = ?, name = ?, birth_date = ?, password = ? where id = ?";
-
-		String driverName = databaseConfig.getProperty(DATABASE_DRIVER_NAME);
-		String url = databaseConfig.getProperty(DATABASE_URL);
-		String login = databaseConfig.getProperty(DATABASE_LOGIN);
-		String password = databaseConfig.getProperty(DATABASE_PASSWORD);
-		try {
-			Class.forName(driverName);
-		} catch (ClassNotFoundException e) {
-			System.out.println("Can't load database driver " + driverName);
-		}
-		try (Connection connection = DriverManager.getConnection(driverName, login, password);
+		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
 		) {
 			preparedStatement.setString(1, user.getLogin());
@@ -245,5 +200,4 @@ public class UserDaoImpl implements UserDao {
 		user.setPassword(resultSet.getString(USER_PASSWORD));
 		return user;
 	}
-
 }
