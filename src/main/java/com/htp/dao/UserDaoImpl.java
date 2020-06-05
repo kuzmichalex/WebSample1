@@ -2,16 +2,16 @@ package com.htp.dao;
 
 import com.htp.domain.User;
 import com.htp.exceptions.ResourceNotFoundException;
-import com.htp.util.DatabaseConfiguration;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static com.htp.util.DatabaseConfiguration.*;
 
 //Аннотация указывает спрингу, что класс применяется для доступа к базе данных (DAO)
 @Repository
@@ -22,8 +22,6 @@ public class UserDaoImpl implements UserDao {
 	public static final String USER_NAME = "name";
 	public static final String USER_BIRTHDATE = "birth_date";
 	public static final String USER_PASSWORD = "password";
-
-	public static DatabaseConfiguration databaseConfig = DatabaseConfiguration.getInstance();
 
 	private DataSource dataSource;
 
