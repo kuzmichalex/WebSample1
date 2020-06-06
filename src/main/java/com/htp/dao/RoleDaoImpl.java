@@ -115,7 +115,7 @@ public class RoleDaoImpl implements RoleDao {
 			if (resultSet.next()) {
 				returnRole = parseRole(resultSet);
 			} else {
-				throw new ResourceNotFoundException("User with id " + roleID + " not found");
+				throw new ResourceNotFoundException("Role with id " + roleID + " not found");
 			}
 		} catch (SQLException e) {
 			System.out.println("Role findByID Error " + e.getMessage());
@@ -132,8 +132,8 @@ public class RoleDaoImpl implements RoleDao {
 
 	@Override
 	public Role save(Role role) {
-		final String saveQuery = "insert into m_roles ( role_name ) values ?";
-		final String getLastInsertId = "select currval('m_roles_id_seq')";
+		final String saveQuery = "insert into m_roles ( role_name ) values (?)";
+		final String getLastInsertId = "select currval('m_roles_id_seq') as last_insert_id";
 
 		ResultSet resultSet = null;
 		try (Connection connection = dataSource.getConnection();
@@ -149,7 +149,7 @@ public class RoleDaoImpl implements RoleDao {
 			long insertedRoleId = resultSet.getLong("last_insert_id");
 			return findOne(insertedRoleId);
 		} catch (SQLException e) {
-			System.out.println("save Error " + e.getMessage());
+			System.out.println("role save Error " + e.getMessage());
 		} finally {
 			try {
 				if (resultSet != null) resultSet.close();
@@ -177,6 +177,44 @@ public class RoleDaoImpl implements RoleDao {
 
 	@Override
 	public int Delete(Role role) {
+		return 0;
+	}
+
+	/**
+	 * batch insert
+	 * @param roles list of roles needed to insert into table
+	 * @return number or roles inserted.
+	 * if an error occurs, no roles will be added
+	 * */
+	@Override
+	public int insertBatch(List<Role> roles) {
+		final int batchSize = 20;
+		int counter = 0;
+		boolean autoCommit;
+
+		String saveQuery = "insert into m_roles ( role_name) values(?)";
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement insertStatement = connection.prepareStatement(saveQuery);
+		) {
+			//Запрещаем авто-комммит
+			autoCommit = connection.getAutoCommit();
+			connection.setAutoCommit(false);
+
+			for (Role role : roles) {
+				insertStatement.setString(1, role.getRoleName());
+				insertStatement.addBatch();
+				//исполнять будем каждые batchSize записей
+				if (++counter % batchSize == 0) {
+					insertStatement.executeBatch();
+				}
+			}
+			insertStatement.executeBatch();
+			connection.commit();
+			connection.setAutoCommit(autoCommit);
+			return counter;
+		} catch (SQLException e) {
+			System.out.println("batch role insert Error " + e.getMessage());
+		}
 		return 0;
 	}
 }

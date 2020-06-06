@@ -2,6 +2,9 @@ package com.htp.domain;
 
 import java.util.Objects;
 
+/**
+ * class that reflects m_roles table entries
+ * */
 public class Role {
 	private long id;
 	private String roleName;

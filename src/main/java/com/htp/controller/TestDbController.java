@@ -49,16 +49,16 @@ public class TestDbController extends HttpServlet {
 
 		out.println("<table>");
 
-		UserDao userDao = new UserDaoImpl();
-		List<User> userList = userDao.findAll();
-		for (User next : userList) {
-			out.println("<tr>");
-			out.println("<td style=\"background-color: cyan\">" + next.getId()+ "</td>");
-			out.println("<td style=\"background-color: red\">" + next.getName()+ "</td>");
-			out.println("<td style=\"background-color: blue\">" + next.getLogin()+ "</td>");
-			out.println("<td style=\"background-color: yellow\">" + next.getBirthDate()+ "</td>");
-			out.println("</tr>");
-		}
+//		UserDao userDao = new UserDaoImpl();
+//		List<User> userList = userDao.findAll();
+//		for (User next : userList) {
+//			out.println("<tr>");
+//			out.println("<td style=\"background-color: cyan\">" + next.getId()+ "</td>");
+//			out.println("<td style=\"background-color: red\">" + next.getName()+ "</td>");
+//			out.println("<td style=\"background-color: blue\">" + next.getLogin()+ "</td>");
+//			out.println("<td style=\"background-color: yellow\">" + next.getBirthDate()+ "</td>");
+//			out.println("</tr>");
+//		}
 		out.println("</table>");
 
 		out.println("<br>");
