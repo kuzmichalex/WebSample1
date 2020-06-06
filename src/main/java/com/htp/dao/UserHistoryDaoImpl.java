@@ -243,7 +243,7 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 		userHistory.setId (resultSet.getLong(USER_HIST_ID));
 		userHistory.setUserId (resultSet.getLong(USER_HIST_USER_ID));
 		userHistory.setDate (resultSet.getTimestamp(USER_HIST_DATE));
-		userHistory.setHeight (resultSet.getInt(USER_HIST_WEIGHT));
+		userHistory.setHeight (resultSet.getInt(USER_HIST_HEIGHT));
 		userHistory.setWeight (resultSet.getInt(USER_HIST_HEIGHT));
 		return userHistory;
 	}
