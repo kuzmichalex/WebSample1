@@ -149,7 +149,7 @@ public class UserRoleDaoImpl implements UserRoleDao {
 			long insertedUserRolesId = resultSet.getLong("last_insert_id");
 			return findOne(insertedUserRolesId);
 		} catch (SQLException e) {
-			System.out.println("save Error " + e.getMessage());
+			System.out.println("save UserRole Error " + e.getMessage());
 		} finally {
 			try {
 				if (resultSet != null) resultSet.close();
