@@ -27,7 +27,7 @@ public class TestUserRoleDaoInsert {
 		assertEquals("Incorrect UserRole save", testUserRole.getUserId(), savedUserRole.getUserId());
 		assertEquals("Incorrect UserRole save", testUserRole.getRoleId(), savedUserRole.getRoleId());
 
-		//А теперь должна быть ошибка, потому что 2 раза одну роль тому же юзеру запрещает ключ.
+		//А теперь должна быть ошибка UserRole Error, потому что 2 раза одну роль тому же юзеру запрещает ключ.
 		UserRole savedUserRole2 = userRoleDaoImpl.save(testUserRole);
 		assertEquals("Incorrect UserRole primary key", savedUserRole2 == null, true);
 		userRoleDaoImpl.Delete(savedUserRole);

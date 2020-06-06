@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.sql.Timestamp;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,22 +20,24 @@ public class TestUserHistoryDao {
 	@Test
 	public void userDaoSaveAndFinOne() {
 		UserHistoryDao userDaoImpl = context.getBean(UserHistoryDao.class);
-		UserHistory testHistory = getRandomUserHistory();
+		UserHistory testHistory = getSomeUserHistory();
 		UserHistory savedUserHistory = userDaoImpl.save(testHistory);
 		assertEquals("Incorrect user id", testHistory.getUserId(), savedUserHistory.getUserId());
 		assertEquals("Incorrect date ", testHistory.getDate(), savedUserHistory.getDate());
 		assertEquals("Incorrect height", testHistory.getHeight(), savedUserHistory.getHeight());
 		assertEquals("Incorrect weight", testHistory.getWeight(), savedUserHistory.getWeight());
 
-		userDaoImpl.Delete(savedUserHistory);
+		//userDaoImpl.Delete(savedUserHistory);
 	}
 
-	private UserHistory getRandomUserHistory() {
+	private UserHistory getSomeUserHistory() {
+		Random random = new Random();
 		UserHistory retValue = new UserHistory();
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		retValue.setUserId(1);
-		retValue.setDate(Timestamp.valueOf("2000-01-01 01:02:03"));
-		retValue.setHeight(180);
-		retValue.setWeight(77);
+		retValue.setDate(timestamp);
+		retValue.setHeight(180 + random.nextInt()%10);
+		retValue.setWeight(77 + random.nextInt()%10);
 		return retValue;
 	}
 }
