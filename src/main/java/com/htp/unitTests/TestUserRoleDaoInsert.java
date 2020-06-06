@@ -23,12 +23,10 @@ public class TestUserRoleDaoInsert {
 		testUserRole.setUserId(1);
 		testUserRole.setRoleId(2);
 
-		UserRole savedUser = userRoleDaoImpl.save(testUserRole);
+		UserRole savedUserRole = userRoleDaoImpl.save(testUserRole);
 
-//		assertEquals("Incorrect ", testUser.getName(), savedUser.getName());
-//		assertEquals("Incorrect ", testUser.getLogin(), savedUser.getLogin());
-//		assertEquals("Incorrect ", testUser.getBirthDate(), savedUser.getBirthDate());
-//		assertEquals("Incorrect ", testUser.getPassword(), savedUser.getPassword());
-//		userDaoImpl.Delete(savedUser);
+		assertEquals("Incorrect ", testUserRole.getUserId(), savedUserRole.getUserId());
+		assertEquals("Incorrect ", testUserRole.getRoleId(), savedUserRole.getRoleId());
+		userRoleDaoImpl.Delete(savedUserRole);
 	}
 }
