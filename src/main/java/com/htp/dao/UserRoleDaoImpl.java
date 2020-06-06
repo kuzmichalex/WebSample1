@@ -33,7 +33,7 @@ public class UserRoleDaoImpl implements UserRoleDao {
 
 	@Override
 	public List<UserRole> findAll() {
-		final String findAllQuery = "select * from l_user_role";
+		final String findAllQuery = "select * from l_user_roles";
 		List<UserRole> listUserRoles = new ArrayList<>();
 		ResultSet resultSet = null;
 
@@ -63,7 +63,7 @@ public class UserRoleDaoImpl implements UserRoleDao {
 
 	@Override
 	public List<UserRole> search(String paramSearch) {
-		final String searchQuery = "select * from l_user_role where id > ? order by id desc";
+		final String searchQuery = "select * from l_user_roles where id > ? order by id desc";
 		//лист для хранения результата поиска
 		List<UserRole> resultList = new ArrayList<>();
 		//сет для получения результата выборки
@@ -162,7 +162,7 @@ public class UserRoleDaoImpl implements UserRoleDao {
 
 	@Override
 	public UserRole update(UserRole userRoles) {
-		final String updateQuery = "update l_user_role set user_id = ?, role_id = ? where id = ?";
+		final String updateQuery = "update l_user_roles set user_id = ?, role_id = ? where id = ?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
 		) {
@@ -178,7 +178,7 @@ public class UserRoleDaoImpl implements UserRoleDao {
 
 	@Override
 	public int Delete(UserRole userRoles) {
-		final String deleteQuery = "delete from l_user_role where id=?";
+		final String deleteQuery = "delete from l_user_roles where id=?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery);
 		) {
@@ -204,7 +204,7 @@ public class UserRoleDaoImpl implements UserRoleDao {
 		int counter = 0;
 		boolean autoCommit;
 
-		String saveQuery = "insert into l_user_role ( user_id, role_id) values( ?, ?)";
+		String saveQuery = "insert into l_user_roles ( user_id, role_id) values( ?, ?)";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement insertStatement = connection.prepareStatement(saveQuery);
 		) {
