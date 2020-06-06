@@ -11,8 +11,8 @@ public class UserHistory {
 	private long id;
 	private long userId;
 	private Timestamp date;
-	private long weight;
-	private long height;
+	private int weight;
+	private int height;
 
 	public UserHistory() {
 	}
@@ -41,19 +41,19 @@ public class UserHistory {
 		this.date = date;
 	}
 
-	public long getWeight() {
+	public int getWeight() {
 		return weight;
 	}
 
-	public void setWeight(long weight) {
+	public void setWeight(int weight) {
 		this.weight = weight;
 	}
 
-	public long getHeight() {
+	public int getHeight() {
 		return height;
 	}
 
-	public void setHeight(long height) {
+	public void setHeight(int height) {
 		this.height = height;
 	}
 
