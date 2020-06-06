@@ -79,7 +79,7 @@ create table m_trainings
             primary key,
     name varchar(100) not null,
     description varchar(200) not null,
-    id_user_author bigserial not null
+    author_user_id bigserial not null
         constraint m_trainings_m_users_id_fk
             references m_users
 );
