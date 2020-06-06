@@ -23,4 +23,6 @@ public interface RoleDao {
 	Role update(Role role);
 
 	int Delete(Role role);
+
+	int insertBatch(List<Role> Roles);
 }

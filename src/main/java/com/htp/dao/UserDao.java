@@ -22,4 +22,6 @@ public interface UserDao {
 	User update(User user);
 
 	int Delete(User user);
+
+	int insertBatch(List<User> users);
 }

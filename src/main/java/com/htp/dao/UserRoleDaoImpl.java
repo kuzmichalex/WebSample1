@@ -1,6 +1,6 @@
 package com.htp.dao;
 
-import com.htp.domain.User;
+import com.htp.domain.UserRole;
 import com.htp.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Repository;
 
@@ -14,29 +14,27 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * class for working with l_user_roles table entries
+ * class for working with l_userRoles_roles table entries
  */
 
 //Аннотация указывает спрингу, что класс применяется для доступа к базе данных (DAO)
 @Repository
-public class UserDaoImpl implements UserDao {
-	//Наименования колонок в таблице m_user
-	public static final String USER_ID = "id";
-	public static final String USER_LOGIN = "login";
-	public static final String USER_NAME = "name";
-	public static final String USER_BIRTHDATE = "birth_date";
-	public static final String USER_PASSWORD = "password";
+public class UserRoleDaoImpl implements UserRoleDao {
+	//Наименования колонок в таблице m_userRoles
+	public static final String USER_ROLE_ID = "id";
+	public static final String USER_ID = "user_id";
+	public static final String ROLE_ID = "role_id";
 
 	private DataSource dataSource;
 
-	public UserDaoImpl(DataSource dataSource) {
+	public UserRoleDaoImpl(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
 	@Override
-	public List<User> findAll() {
-		final String findAllQuery = "select * from m_users order by id desc";
-		List<User> listUsers = new ArrayList<>();
+	public List<UserRole> findAll() {
+		final String findAllQuery = "select * from l_user_roles";
+		List<UserRole> listUserRoles = new ArrayList<>();
 		ResultSet resultSet = null;
 
 		try (Connection connection = dataSource.getConnection();
@@ -47,7 +45,7 @@ public class UserDaoImpl implements UserDao {
 			resultSet = preparedStatement.executeQuery();
 			//5. Вычитываем результат
 			while (resultSet.next()) {
-				listUsers.add(parseUser(resultSet));
+				listUserRoles.add(parseUserRoles(resultSet));
 			}
 		} catch (SQLException e) {
 			System.out.println("Error" + this.getClass().getName() + ":" + e.getMessage()); // e.printStackTrace();
@@ -60,14 +58,14 @@ public class UserDaoImpl implements UserDao {
 				}
 			}
 		}
-		return listUsers;
+		return listUserRoles;
 	}
 
 	@Override
-	public List<User> search(String paramSearch) {
-		final String searchQuery = "select * from m_users where id > ? order by id desc";
+	public List<UserRole> search(String paramSearch) {
+		final String searchQuery = "select * from l_user_roles where id > ? order by id desc";
 		//лист для хранения результата поиска
-		List<User> resultList = new ArrayList<>();
+		List<UserRole> resultList = new ArrayList<>();
 		//сет для получения результата выборки
 		ResultSet resultSet = null;
 
@@ -81,7 +79,7 @@ public class UserDaoImpl implements UserDao {
 			resultSet = preparedStatement.executeQuery();
 			//получаем из resultSet список пользователей
 			while (resultSet.next()) {
-				resultList.add(parseUser(resultSet));
+				resultList.add(parseUserRoles(resultSet));
 			}
 		} catch (SQLException e) {
 			System.out.println("Error" + this.getClass().getName() + ":" + e.getMessage()); // e.printStackTrace();
@@ -96,28 +94,28 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public Optional<User> findById(long userID) {
-		return Optional.ofNullable(findOne(userID));
+	public Optional<UserRole> findById(long userRolesID) {
+		return Optional.ofNullable(findOne(userRolesID));
 	}
 
 	@Override
-	public User findOne(long userID) {
+	public UserRole findOne(long userRolesID) {
 		//search expression
-		final String searchByIDQuery = "select * from m_users where id = ? order by id desc";
+		final String searchByIDQuery = "select * from l_user_roles where id = ? order by id desc";
 		//Result
-		User returnUser = null;
+		UserRole returnUserRoles = null;
 		//ResultSet
 		ResultSet resultSet = null;
 		try (
 				Connection connection = dataSource.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(searchByIDQuery);
 		) {
-			preparedStatement.setLong(1, userID);
+			preparedStatement.setLong(1, userRolesID);
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
-				returnUser = parseUser(resultSet);
+				returnUserRoles = parseUserRoles(resultSet);
 			} else {
-				throw new ResourceNotFoundException("User with id " + userID + " not found");
+				throw new ResourceNotFoundException("UserRoles with id " + userRolesID + " not found");
 			}
 		} catch (SQLException e) {
 			System.out.println("findByID Error " + e.getMessage());
@@ -129,31 +127,29 @@ public class UserDaoImpl implements UserDao {
 				e.printStackTrace();
 			}
 		}
-		return returnUser;
+		return returnUserRoles;
 	}
 
 	@Override
-	public User save(User user) {
-		final String saveQuery = "insert into m_users ( login, name, birth_date, password) values( ?, ?, ?, ?)";
-		final String getLastInsertId = "select currval('m_users_id_seq') as last_insert_id";
+	public UserRole save(UserRole userRoles) {
+		final String saveQuery = "insert into l_user_roles ( user_id, role_id) values( ?, ? )";
+		final String getLastInsertId = "select currval('l_user_roles_id_seq') as last_insert_id";
 		ResultSet resultSet = null;
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement insertStatement = connection.prepareStatement(saveQuery);
 		     PreparedStatement getLastIdStatement = connection.prepareStatement(getLastInsertId);
 		) {
 			//Добавляем
-			insertStatement.setString(1, user.getLogin());
-			insertStatement.setString(2, user.getName());
-			insertStatement.setDate(3, user.getBirthDate());
-			insertStatement.setString(4, user.getPassword());
+			insertStatement.setLong(1, userRoles.getUserId());
+			insertStatement.setLong(2, userRoles.getRoleId());
 			insertStatement.executeUpdate();
 			//Получаем последний сохранённый ID
 			resultSet = getLastIdStatement.executeQuery();
 			resultSet.next();
-			long insertedUserId = resultSet.getLong("last_insert_id");
-			return findOne(insertedUserId);
+			long insertedUserRolesId = resultSet.getLong("last_insert_id");
+			return findOne(insertedUserRolesId);
 		} catch (SQLException e) {
-			System.out.println("save Error " + e.getMessage());
+			System.out.println("save UserRole Error " + e.getMessage());
 		} finally {
 			try {
 				if (resultSet != null) resultSet.close();
@@ -165,51 +161,50 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public User update(User user) {
-		final String updateQuery = "update m_users set login = ?, name = ?, birth_date = ?, password = ? where id = ?";
+	public UserRole update(UserRole userRoles) {
+		final String updateQuery = "update l_user_roles set user_id = ?, role_id = ? where id = ?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
 		) {
-			preparedStatement.setString(1, user.getLogin());
-			preparedStatement.setString(2, user.getName());
-			preparedStatement.setDate(3, user.getBirthDate());
-			preparedStatement.setString(4, user.getPassword());
-			preparedStatement.setLong(5, user.getId());
+			preparedStatement.setLong(1, userRoles.getRoleId());
+			preparedStatement.setLong(2, userRoles.getUserId());
+			preparedStatement.setLong(3, userRoles.getId());
 			preparedStatement.executeUpdate();
-			return findOne(user.getId());
+			return findOne(userRoles.getId());
 		} catch (SQLException e) {
-			throw new RuntimeException("user update failed");
+			throw new RuntimeException("userRoles update failed");
 		}
 	}
 
 	@Override
-	public int Delete(User user) {
-		final String deleteQuery = "delete from m_users where id=?";
+	public int Delete(UserRole userRoles) {
+		final String deleteQuery = "delete from l_user_roles where id=?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery);
 		) {
-			preparedStatement.setLong(1, user.getId());
+			preparedStatement.setLong(1, userRoles.getId());
 			preparedStatement.executeUpdate();
 			return 1;
 		} catch (SQLException e) {
-			throw new RuntimeException("user delete failed");
+			throw new RuntimeException("userRoles delete failed");
 		}
 	}
 
 
 	/**
 	 * batch insert
-	 * @param users list of users needed to insert into table
-	 * @return number or users inserted.
-	 * if an error occurs, no users will be added
-	 * */
+	 *
+	 *@param userRoles list of userRoless needed to insert into table
+	 * @return number or userRoless inserted.
+	 * if an error occurs, no userRoless will be added
+	 */
 	@Override
-	public int insertBatch(List<User> users) {
+	public int insertBatch(List<UserRole> userRoles) {
 		final int batchSize = 20;
 		int counter = 0;
 		boolean autoCommit;
 
-		String saveQuery = "insert into m_users ( login, name, birth_date, password) values( ?, ?, ?, ?)";
+		String saveQuery = "insert into l_user_roles ( user_id, role_id) values( ?, ?)";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement insertStatement = connection.prepareStatement(saveQuery);
 		) {
@@ -217,11 +212,9 @@ public class UserDaoImpl implements UserDao {
 			autoCommit = connection.getAutoCommit();
 			connection.setAutoCommit(false);
 
-			for (User user : users) {
-				insertStatement.setString(1, user.getLogin());
-				insertStatement.setString(2, user.getName());
-				insertStatement.setDate(3, user.getBirthDate());
-				insertStatement.setString(4, user.getPassword());
+			for (UserRole userRoleRec : userRoles) {
+				insertStatement.setString(1, Long.toString(userRoleRec.getUserId()));
+				insertStatement.setString(2, Long.toString(userRoleRec.getRoleId()));
 
 				insertStatement.addBatch();
 				//исполнять будем каждые batchSize записей
@@ -240,18 +233,17 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	/**
-	 * parse ResultSet to User
+	 * parse ResultSet to UserRoles
 	 *
 	 * @param resultSet
-	 * @return User
+	 * @return UserRoles
 	 */
-	private User parseUser(ResultSet resultSet) throws SQLException {
-		User user = new User();
-		user.setId(resultSet.getLong(USER_ID));
-		user.setLogin(resultSet.getString(USER_LOGIN));
-		user.setName(resultSet.getString(USER_NAME));
-		user.setBirthDate(resultSet.getDate(USER_BIRTHDATE));
-		user.setPassword(resultSet.getString(USER_PASSWORD));
-		return user;
+	private UserRole parseUserRoles(ResultSet resultSet) throws SQLException {
+		UserRole userRoles = new UserRole();
+		userRoles.setId(resultSet.getLong(USER_ROLE_ID));
+		userRoles.setUserId(Long.parseLong(resultSet.getString(USER_ID)));
+		userRoles.setRoleId(Long.parseLong(resultSet.getString(ROLE_ID)));
+		return userRoles;
 	}
+
 }

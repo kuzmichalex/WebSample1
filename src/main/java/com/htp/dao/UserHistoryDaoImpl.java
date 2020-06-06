@@ -1,6 +1,7 @@
 package com.htp.dao;
 
 import com.htp.domain.User;
+import com.htp.domain.UserHistory;
 import com.htp.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Repository;
 
@@ -13,30 +14,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * class for working with l_user_roles table entries
- */
-
-//Аннотация указывает спрингу, что класс применяется для доступа к базе данных (DAO)
 @Repository
-public class UserDaoImpl implements UserDao {
-	//Наименования колонок в таблице m_user
-	public static final String USER_ID = "id";
-	public static final String USER_LOGIN = "login";
-	public static final String USER_NAME = "name";
-	public static final String USER_BIRTHDATE = "birth_date";
-	public static final String USER_PASSWORD = "password";
-
+public class UserHistoryDaoImpl implements UserHistoryDao {
 	private DataSource dataSource;
+	public static final String USER_HIST_ID = "id";
+	public static final String USER_HIST_USER_ID = "user_id";
+	public static final String USER_HIST_DATE = "date";
+	public static final String USER_HIST_WEIGHT = "weight";
+	public static final String USER_HIST_HEIGHT = "height";
 
-	public UserDaoImpl(DataSource dataSource) {
+	public UserHistoryDaoImpl(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
-
 	@Override
-	public List<User> findAll() {
-		final String findAllQuery = "select * from m_users order by id desc";
-		List<User> listUsers = new ArrayList<>();
+	public List<UserHistory> findAll() {
+		final String findAllQuery = "select * from m_user_history";
+		List<UserHistory> listUserHistory = new ArrayList<>();
 		ResultSet resultSet = null;
 
 		try (Connection connection = dataSource.getConnection();
@@ -47,7 +40,7 @@ public class UserDaoImpl implements UserDao {
 			resultSet = preparedStatement.executeQuery();
 			//5. Вычитываем результат
 			while (resultSet.next()) {
-				listUsers.add(parseUser(resultSet));
+				listUserHistory.add(parseUserHistory(resultSet));
 			}
 		} catch (SQLException e) {
 			System.out.println("Error" + this.getClass().getName() + ":" + e.getMessage()); // e.printStackTrace();
@@ -60,14 +53,14 @@ public class UserDaoImpl implements UserDao {
 				}
 			}
 		}
-		return listUsers;
+		return listUserHistory;
 	}
 
 	@Override
-	public List<User> search(String paramSearch) {
-		final String searchQuery = "select * from m_users where id > ? order by id desc";
+	public List<UserHistory> search(String paramSearch) {
+		final String searchQuery = "select * from m_user_history where id > ? order by id desc";
 		//лист для хранения результата поиска
-		List<User> resultList = new ArrayList<>();
+		List<UserHistory> resultList = new ArrayList<>();
 		//сет для получения результата выборки
 		ResultSet resultSet = null;
 
@@ -81,10 +74,10 @@ public class UserDaoImpl implements UserDao {
 			resultSet = preparedStatement.executeQuery();
 			//получаем из resultSet список пользователей
 			while (resultSet.next()) {
-				resultList.add(parseUser(resultSet));
+				resultList.add(parseUserHistory(resultSet));
 			}
 		} catch (SQLException e) {
-			System.out.println("Error" + this.getClass().getName() + ":" + e.getMessage()); // e.printStackTrace();
+			System.out.println("Error UserHistory search" + this.getClass().getName() + ":" + e.getMessage()); // e.printStackTrace();
 		} finally {
 			try {
 				if (resultSet != null) resultSet.close();
@@ -96,28 +89,28 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public Optional<User> findById(long userID) {
-		return Optional.ofNullable(findOne(userID));
+	public Optional<UserHistory> findById(long recordId) {
+		return Optional.ofNullable(findOne(recordId));
 	}
 
 	@Override
-	public User findOne(long userID) {
+	public UserHistory findOne(long recordId) {
 		//search expression
-		final String searchByIDQuery = "select * from m_users where id = ? order by id desc";
+		final String searchByIDQuery = "select * from m_user_history where id = ? order by id desc";
 		//Result
-		User returnUser = null;
+		UserHistory returnUserHistory = null;
 		//ResultSet
 		ResultSet resultSet = null;
 		try (
 				Connection connection = dataSource.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(searchByIDQuery);
 		) {
-			preparedStatement.setLong(1, userID);
+			preparedStatement.setLong(1, recordId);
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
-				returnUser = parseUser(resultSet);
+				returnUserHistory = parseUserHistory(resultSet);
 			} else {
-				throw new ResourceNotFoundException("User with id " + userID + " not found");
+				throw new ResourceNotFoundException("User history with id " + recordId + " not found");
 			}
 		} catch (SQLException e) {
 			System.out.println("findByID Error " + e.getMessage());
@@ -129,23 +122,23 @@ public class UserDaoImpl implements UserDao {
 				e.printStackTrace();
 			}
 		}
-		return returnUser;
+		return returnUserHistory;
 	}
 
 	@Override
-	public User save(User user) {
-		final String saveQuery = "insert into m_users ( login, name, birth_date, password) values( ?, ?, ?, ?)";
-		final String getLastInsertId = "select currval('m_users_id_seq') as last_insert_id";
+	public UserHistory save(UserHistory userHistory) {
+		final String saveQuery = "insert into m_user_history ( user_id, date, weight, height) values( ?, ?, ?, ?)";
+		final String getLastInsertId = "select currval('m_user_history_id_seq') as last_insert_id";
 		ResultSet resultSet = null;
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement insertStatement = connection.prepareStatement(saveQuery);
 		     PreparedStatement getLastIdStatement = connection.prepareStatement(getLastInsertId);
 		) {
 			//Добавляем
-			insertStatement.setString(1, user.getLogin());
-			insertStatement.setString(2, user.getName());
-			insertStatement.setDate(3, user.getBirthDate());
-			insertStatement.setString(4, user.getPassword());
+			insertStatement.setLong(1, userHistory.getUserId());
+			insertStatement.setTimestamp(2, userHistory.getDate());
+			insertStatement.setInt(3, userHistory.getWeight());
+			insertStatement.setInt(4, userHistory.getHeight());
 			insertStatement.executeUpdate();
 			//Получаем последний сохранённый ID
 			resultSet = getLastIdStatement.executeQuery();
@@ -165,30 +158,30 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public User update(User user) {
-		final String updateQuery = "update m_users set login = ?, name = ?, birth_date = ?, password = ? where id = ?";
+	public UserHistory update(UserHistory userHistory) {
+		final String updateQuery = "update m_user_history set user_id = ?, date = ?, weight = ?, height = ? where id = ?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
 		) {
-			preparedStatement.setString(1, user.getLogin());
-			preparedStatement.setString(2, user.getName());
-			preparedStatement.setDate(3, user.getBirthDate());
-			preparedStatement.setString(4, user.getPassword());
-			preparedStatement.setLong(5, user.getId());
+			preparedStatement.setLong(1, userHistory.getUserId());
+			preparedStatement.setTimestamp(2, userHistory.getDate());
+			preparedStatement.setInt(3, userHistory.getWeight());
+			preparedStatement.setInt(4, userHistory.getHeight());
+			preparedStatement.setLong(5, userHistory.getId());
 			preparedStatement.executeUpdate();
-			return findOne(user.getId());
+			return findOne(userHistory.getId());
 		} catch (SQLException e) {
 			throw new RuntimeException("user update failed");
 		}
 	}
 
 	@Override
-	public int Delete(User user) {
-		final String deleteQuery = "delete from m_users where id=?";
+	public int Delete(UserHistory userHistory) {
+		final String deleteQuery = "delete from m_user_history where id=?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery);
 		) {
-			preparedStatement.setLong(1, user.getId());
+			preparedStatement.setLong(1, userHistory.getId());
 			preparedStatement.executeUpdate();
 			return 1;
 		} catch (SQLException e) {
@@ -196,20 +189,19 @@ public class UserDaoImpl implements UserDao {
 		}
 	}
 
-
 	/**
 	 * batch insert
-	 * @param users list of users needed to insert into table
+	 * @param userHistories list of users needed to insert into table
 	 * @return number or users inserted.
 	 * if an error occurs, no users will be added
 	 * */
 	@Override
-	public int insertBatch(List<User> users) {
+	public int insertBatch(List<UserHistory> userHistories) {
 		final int batchSize = 20;
 		int counter = 0;
 		boolean autoCommit;
 
-		String saveQuery = "insert into m_users ( login, name, birth_date, password) values( ?, ?, ?, ?)";
+		String saveQuery = "insert into m_user_history ( user_id, date, weight, height) values( ?, ?, ?, ?)";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement insertStatement = connection.prepareStatement(saveQuery);
 		) {
@@ -217,11 +209,11 @@ public class UserDaoImpl implements UserDao {
 			autoCommit = connection.getAutoCommit();
 			connection.setAutoCommit(false);
 
-			for (User user : users) {
-				insertStatement.setString(1, user.getLogin());
-				insertStatement.setString(2, user.getName());
-				insertStatement.setDate(3, user.getBirthDate());
-				insertStatement.setString(4, user.getPassword());
+			for (UserHistory userHistory : userHistories) {
+				insertStatement.setLong(1, userHistory.getUserId());
+				insertStatement.setTimestamp(2, userHistory.getDate());
+				insertStatement.setInt(3, userHistory.getWeight());
+				insertStatement.setInt(4, userHistory.getHeight());
 
 				insertStatement.addBatch();
 				//исполнять будем каждые batchSize записей
@@ -239,19 +231,21 @@ public class UserDaoImpl implements UserDao {
 		return 0;
 	}
 
+
 	/**
 	 * parse ResultSet to User
 	 *
 	 * @param resultSet
 	 * @return User
 	 */
-	private User parseUser(ResultSet resultSet) throws SQLException {
-		User user = new User();
-		user.setId(resultSet.getLong(USER_ID));
-		user.setLogin(resultSet.getString(USER_LOGIN));
-		user.setName(resultSet.getString(USER_NAME));
-		user.setBirthDate(resultSet.getDate(USER_BIRTHDATE));
-		user.setPassword(resultSet.getString(USER_PASSWORD));
-		return user;
+	private UserHistory parseUserHistory(ResultSet resultSet) throws SQLException {
+		UserHistory userHistory = new UserHistory();
+		userHistory.setId (resultSet.getLong(USER_HIST_ID));
+		userHistory.setUserId (resultSet.getLong(USER_HIST_USER_ID));
+		userHistory.setDate (resultSet.getTimestamp(USER_HIST_DATE));
+		userHistory.setHeight (resultSet.getInt(USER_HIST_HEIGHT));
+		userHistory.setWeight (resultSet.getInt(USER_HIST_WEIGHT));
+		return userHistory;
 	}
+
 }

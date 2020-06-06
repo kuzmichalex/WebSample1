@@ -4,8 +4,8 @@ import java.sql.Date;
 import java.util.Objects;
 
 /**
- * Класс для описания структуры таблицы m_Users
- */
+ * class that reflects m_roles table entries
+ * */
 public class User {
 
 	private long id;
