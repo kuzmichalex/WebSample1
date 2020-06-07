@@ -2,7 +2,6 @@ package com.htp.unitTests;
 
 import com.htp.dao.TrainingDao;
 import com.htp.domain.Training;
-import com.htp.domain.User;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

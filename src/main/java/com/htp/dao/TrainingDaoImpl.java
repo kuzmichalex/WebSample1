@@ -1,7 +1,6 @@
 package com.htp.dao;
 
 import com.htp.domain.Training;
-import com.htp.domain.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -26,7 +25,7 @@ public class TrainingDaoImpl implements TrainingDao {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
-	private Training TrainingRowMapper(ResultSet resultSet, int i) throws SQLException {
+	private Training trainingRowMapper(ResultSet resultSet, int i) throws SQLException {
 		Training training = new Training();
 		training.setId(resultSet.getLong(TRAINING_ID));
 		training.setName(resultSet.getString(TRAINING_NAME));
@@ -38,7 +37,7 @@ public class TrainingDaoImpl implements TrainingDao {
 	@Override
 	public List<Training> findAll() {
 		final String findAllQuery = "select * from m_trainings order by id desc";
-		return jdbcTemplate.query(findAllQuery, this::TrainingRowMapper);
+		return jdbcTemplate.query(findAllQuery, this::trainingRowMapper);
 	}
 
 	@Override
@@ -59,7 +58,7 @@ public class TrainingDaoImpl implements TrainingDao {
 	@Override
 	public Training save(Training training) {
 		final String saveQuery = "insert into m_trainings ( name, description, author_user_id) values( ?, ?, ?)";
-		List<Training> query = jdbcTemplate.query(saveQuery, this::TrainingRowMapper);
+		List<Training> query = jdbcTemplate.query(saveQuery, this::trainingRowMapper);
 		//jdbcTemplate.update(saveQuery, training.getName(), training.getDescription(), training.getUserAuthorId());
 		return query.get(0);
 	}
