@@ -57,44 +57,12 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 	}
 
 	@Override
-	public List<UserHistory> search(String paramSearch) {
-		final String searchQuery = "select * from m_user_history where id > ? order by id desc";
-		//лист для хранения результата поиска
-		List<UserHistory> resultList = new ArrayList<>();
-		//сет для получения результата выборки
-		ResultSet resultSet = null;
-
-		try (   //Устанавливаем соединение
-		        Connection connection = dataSource.getConnection();
-		        PreparedStatement preparedStatement = connection.prepareStatement(searchQuery);
-		) {
-			//Готовим выражение
-			preparedStatement.setLong(1, Long.parseLong(paramSearch));
-			//Выполняем выражение
-			resultSet = preparedStatement.executeQuery();
-			//получаем из resultSet список пользователей
-			while (resultSet.next()) {
-				resultList.add(parseUserHistory(resultSet));
-			}
-		} catch (SQLException e) {
-			System.out.println("Error UserHistory search" + this.getClass().getName() + ":" + e.getMessage()); // e.printStackTrace();
-		} finally {
-			try {
-				if (resultSet != null) resultSet.close();
-			} catch (SQLException throwables) {
-				throwables.printStackTrace();
-			}
-		}
-		return resultList;
-	}
-
-	@Override
 	public Optional<UserHistory> findById(long recordId) {
 		return Optional.ofNullable(findOne(recordId));
 	}
 
 	@Override
-	public UserHistory findOne(long recordId) {
+	public UserHistory findOne(Long itemId) {
 		//search expression
 		final String searchByIDQuery = "select * from m_user_history where id = ? order by id desc";
 		//Result
@@ -105,12 +73,12 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 				Connection connection = dataSource.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(searchByIDQuery);
 		) {
-			preparedStatement.setLong(1, recordId);
+			preparedStatement.setLong(1, itemId);
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				returnUserHistory = parseUserHistory(resultSet);
 			} else {
-				throw new ResourceNotFoundException("User history with id " + recordId + " not found");
+				throw new ResourceNotFoundException("User history with id " + itemId + " not found");
 			}
 		} catch (SQLException e) {
 			System.out.println("findByID Error " + e.getMessage());
@@ -124,6 +92,7 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 		}
 		return returnUserHistory;
 	}
+
 
 	@Override
 	public UserHistory save(UserHistory userHistory) {
@@ -158,30 +127,30 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 	}
 
 	@Override
-	public UserHistory update(UserHistory userHistory) {
+	public UserHistory update(UserHistory item) {
 		final String updateQuery = "update m_user_history set user_id = ?, date = ?, weight = ?, height = ? where id = ?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
 		) {
-			preparedStatement.setLong(1, userHistory.getUserId());
-			preparedStatement.setTimestamp(2, userHistory.getDate());
-			preparedStatement.setInt(3, userHistory.getWeight());
-			preparedStatement.setInt(4, userHistory.getHeight());
-			preparedStatement.setLong(5, userHistory.getId());
+			preparedStatement.setLong(1, item.getUserId());
+			preparedStatement.setTimestamp(2, item.getDate());
+			preparedStatement.setInt(3, item.getWeight());
+			preparedStatement.setInt(4, item.getHeight());
+			preparedStatement.setLong(5, item.getId());
 			preparedStatement.executeUpdate();
-			return findOne(userHistory.getId());
+			return findOne(item.getId());
 		} catch (SQLException e) {
 			throw new RuntimeException("user update failed");
 		}
 	}
 
 	@Override
-	public int Delete(UserHistory userHistory) {
+	public int delete(UserHistory item) {
 		final String deleteQuery = "delete from m_user_history where id=?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery);
 		) {
-			preparedStatement.setLong(1, userHistory.getId());
+			preparedStatement.setLong(1, item.getId());
 			preparedStatement.executeUpdate();
 			return 1;
 		} catch (SQLException e) {
@@ -195,41 +164,41 @@ public class UserHistoryDaoImpl implements UserHistoryDao {
 	 * @return number or users inserted.
 	 * if an error occurs, no users will be added
 	 * */
-	@Override
-	public int insertBatch(List<UserHistory> userHistories) {
-		final int batchSize = 20;
-		int counter = 0;
-		boolean autoCommit;
-
-		String saveQuery = "insert into m_user_history ( user_id, date, weight, height) values( ?, ?, ?, ?)";
-		try (Connection connection = dataSource.getConnection();
-		     PreparedStatement insertStatement = connection.prepareStatement(saveQuery);
-		) {
-			//Запрещаем авто-комммит
-			autoCommit = connection.getAutoCommit();
-			connection.setAutoCommit(false);
-
-			for (UserHistory userHistory : userHistories) {
-				insertStatement.setLong(1, userHistory.getUserId());
-				insertStatement.setTimestamp(2, userHistory.getDate());
-				insertStatement.setInt(3, userHistory.getWeight());
-				insertStatement.setInt(4, userHistory.getHeight());
-
-				insertStatement.addBatch();
-				//исполнять будем каждые batchSize записей
-				if (++counter % batchSize == 0) {
-					insertStatement.executeBatch();
-				}
-			}
-			insertStatement.executeBatch();
-			connection.commit();
-			connection.setAutoCommit(autoCommit);
-			return counter;
-		} catch (SQLException e) {
-			System.out.println("batch insert Error " + e.getMessage());
-		}
-		return 0;
-	}
+//	@Override
+//	public int insertBatch(List<UserHistory> userHistories) {
+//		final int batchSize = 20;
+//		int counter = 0;
+//		boolean autoCommit;
+//
+//		String saveQuery = "insert into m_user_history ( user_id, date, weight, height) values( ?, ?, ?, ?)";
+//		try (Connection connection = dataSource.getConnection();
+//		     PreparedStatement insertStatement = connection.prepareStatement(saveQuery);
+//		) {
+//			//Запрещаем авто-комммит
+//			autoCommit = connection.getAutoCommit();
+//			connection.setAutoCommit(false);
+//
+//			for (UserHistory userHistory : userHistories) {
+//				insertStatement.setLong(1, userHistory.getUserId());
+//				insertStatement.setTimestamp(2, userHistory.getDate());
+//				insertStatement.setInt(3, userHistory.getWeight());
+//				insertStatement.setInt(4, userHistory.getHeight());
+//
+//				insertStatement.addBatch();
+//				//исполнять будем каждые batchSize записей
+//				if (++counter % batchSize == 0) {
+//					insertStatement.executeBatch();
+//				}
+//			}
+//			insertStatement.executeBatch();
+//			connection.commit();
+//			connection.setAutoCommit(autoCommit);
+//			return counter;
+//		} catch (SQLException e) {
+//			System.out.println("batch insert Error " + e.getMessage());
+//		}
+//		return 0;
+//	}
 
 
 	/**

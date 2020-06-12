@@ -22,10 +22,6 @@ public class SpringExperiments {
 			System.out.printf(" %5s : %20s\n", user.getId(), user.getName());
 		}
 
-		System.out.println("--------------findOne");
-		User user = userDaoImpl.findOne(4);
-		System.out.println(user);
-
 
 
 	}

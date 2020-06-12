@@ -28,7 +28,7 @@ public class TestUserRoleDao {
 		//А теперь должна быть ошибка UserRole Error, потому что 2 раза одну роль тому же юзеру запрещает ключ.
 		UserRole savedUserRole2 = userRoleDaoImpl.save(testUserRole);
 		assertEquals("Incorrect UserRole primary key", savedUserRole2 == null, true);
-		userRoleDaoImpl.Delete(savedUserRole);
+		userRoleDaoImpl.delete(savedUserRole);
 
 	}
 }

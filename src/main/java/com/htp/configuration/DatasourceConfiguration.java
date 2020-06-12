@@ -15,10 +15,12 @@ import javax.sql.DataSource;
  * конфигурация источника данных
  */
 
-/*@Configuration указывает спрингу, что класс хранит конфигурации
+/*  @Configuration указывает спрингу, что класс хранит конфигурации
 	@PropertySource указывает спрингу на файл конфигурации
 	@Value отмеченные этой аннотацией переменные будут
-	проиницализированы спрингом значениями из PropertySource*/
+	проиницализированы спрингом значениями из PropertySource
+	@Bean Отмеченные этой аннотацией методы будут вызваны для получения соответствующих объектов
+	*/
 
 
 @Configuration
@@ -72,4 +74,5 @@ public class DatasourceConfiguration {
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate(DataSource dataSource) {
 		return new NamedParameterJdbcTemplate(dataSource);
 	}
+
 }

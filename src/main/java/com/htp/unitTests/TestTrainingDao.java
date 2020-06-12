@@ -14,22 +14,23 @@ public class TestTrainingDao {
 		context = new AnnotationConfigApplicationContext("com.htp");
 	}
 	@Test
+	public void testTrainingFindAll(){
+		return;
+//		TrainingDao traningDao = context.getBean(TrainingDao.class);
+//		List<Training> all = traningDao.findAll();
+//		for (Training training1 : all) {
+//			System.out.println(training1);
+//		}
+	}
+	@Test
 	public void testTrainingSave(){
-		TrainingDao traningDao = context.getBean(TrainingDao.class);
+		/*TrainingDao trainingDao = context.getBean(TrainingDao.class);
 		Training training = new Training();
 		training.setName("Running");
-		training.setName("Run, Run, Run!");
-		List<Training> all = traningDao.findAll();
-		for (Training training1 : all) {
-			System.out.println(training1);
-		}
+		training.setDescription("Run, Run, Run!");
+		training.setUserAuthorId(1);
 
-		//traningDao.save(training);
-		//training.setUserAuthorId(1);
+		trainingDao.save(training);*/
 
-//		for (User user : userRepositoryJdbcTemplate.findAll()) {
-//			System.out.println(user);
-//		}
-//		traningDao.save(training);
 	}
 }

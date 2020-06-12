@@ -24,7 +24,7 @@ public class UserDaoImpl implements UserDao {
 	public static final String USER_ID = "id";
 	public static final String USER_LOGIN = "login";
 	public static final String USER_NAME = "name";
-	public static final String USER_BIRTHDATE = "birth_date";
+	public static final String USER_BIRTHDAY = "birth_date";
 	public static final String USER_PASSWORD = "password";
 
 	private DataSource dataSource;
@@ -64,7 +64,7 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public List<User> search(String paramSearch) {
+	public List<User> search(String strId) {
 		final String searchQuery = "select * from m_users where id > ? order by id desc";
 		//лист для хранения результата поиска
 		List<User> resultList = new ArrayList<>();
@@ -76,7 +76,7 @@ public class UserDaoImpl implements UserDao {
 		        PreparedStatement preparedStatement = connection.prepareStatement(searchQuery);
 		) {
 			//Готовим выражение
-			preparedStatement.setLong(1, Long.parseLong(paramSearch));
+			preparedStatement.setLong(1, Long.parseLong(strId));
 			//Выполняем выражение
 			resultSet = preparedStatement.executeQuery();
 			//получаем из resultSet список пользователей
@@ -101,7 +101,7 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public User findOne(long userID) {
+	public User findOne(Long itemId) {
 		//search expression
 		final String searchByIDQuery = "select * from m_users where id = ? order by id desc";
 		//Result
@@ -112,12 +112,12 @@ public class UserDaoImpl implements UserDao {
 				Connection connection = dataSource.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(searchByIDQuery);
 		) {
-			preparedStatement.setLong(1, userID);
+			preparedStatement.setLong(1, itemId);
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				returnUser = parseUser(resultSet);
 			} else {
-				throw new ResourceNotFoundException("User with id " + userID + " not found");
+				throw new ResourceNotFoundException("User with id " + itemId + " not found");
 			}
 		} catch (SQLException e) {
 			System.out.println("findByID Error " + e.getMessage());
@@ -183,7 +183,7 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public int Delete(User user) {
+	public int delete(User user) {
 		final String deleteQuery = "delete from m_users where id=?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery);
@@ -250,7 +250,7 @@ public class UserDaoImpl implements UserDao {
 		user.setId(resultSet.getLong(USER_ID));
 		user.setLogin(resultSet.getString(USER_LOGIN));
 		user.setName(resultSet.getString(USER_NAME));
-		user.setBirthDate(resultSet.getDate(USER_BIRTHDATE));
+		user.setBirthDate(resultSet.getDate(USER_BIRTHDAY));
 		user.setPassword(resultSet.getString(USER_PASSWORD));
 		return user;
 	}

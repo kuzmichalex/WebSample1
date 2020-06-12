@@ -19,7 +19,7 @@ import java.util.Optional;
 
 //Аннотация указывает спрингу, что класс применяется для доступа к базе данных (DAO)
 @Repository
-public class UserRoleDaoImpl implements UserRoleDao {
+public class UserRoleDaoImpl implements UserRoleDao  {
 	//Наименования колонок в таблице m_userRoles
 	public static final String USER_ROLE_ID = "id";
 	public static final String USER_ID = "user_id";
@@ -61,7 +61,8 @@ public class UserRoleDaoImpl implements UserRoleDao {
 		return listUserRoles;
 	}
 
-	@Override
+
+/*	@Override
 	public List<UserRole> search(String paramSearch) {
 		final String searchQuery = "select * from l_user_roles where id > ? order by id desc";
 		//лист для хранения результата поиска
@@ -91,7 +92,7 @@ public class UserRoleDaoImpl implements UserRoleDao {
 			}
 		}
 		return resultList;
-	}
+	}*/
 
 	@Override
 	public Optional<UserRole> findById(long userRolesID) {
@@ -99,7 +100,7 @@ public class UserRoleDaoImpl implements UserRoleDao {
 	}
 
 	@Override
-	public UserRole findOne(long userRolesID) {
+	public UserRole findOne(Long itemId) {
 		//search expression
 		final String searchByIDQuery = "select * from l_user_roles where id = ? order by id desc";
 		//Result
@@ -110,12 +111,12 @@ public class UserRoleDaoImpl implements UserRoleDao {
 				Connection connection = dataSource.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(searchByIDQuery);
 		) {
-			preparedStatement.setLong(1, userRolesID);
+			preparedStatement.setLong(1, itemId);
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				returnUserRoles = parseUserRoles(resultSet);
 			} else {
-				throw new ResourceNotFoundException("UserRoles with id " + userRolesID + " not found");
+				throw new ResourceNotFoundException("UserRoles with id " + itemId + " not found");
 			}
 		} catch (SQLException e) {
 			System.out.println("findByID Error " + e.getMessage());
@@ -176,13 +177,15 @@ public class UserRoleDaoImpl implements UserRoleDao {
 		}
 	}
 
+
+
 	@Override
-	public int Delete(UserRole userRoles) {
+	public int delete(UserRole item) {
 		final String deleteQuery = "delete from l_user_roles where id=?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery);
 		) {
-			preparedStatement.setLong(1, userRoles.getId());
+			preparedStatement.setLong(1, item.getId());
 			preparedStatement.executeUpdate();
 			return 1;
 		} catch (SQLException e) {
@@ -198,7 +201,7 @@ public class UserRoleDaoImpl implements UserRoleDao {
 	 * @return number or userRoless inserted.
 	 * if an error occurs, no userRoless will be added
 	 */
-	@Override
+/*	@Override
 	public int insertBatch(List<UserRole> userRoles) {
 		final int batchSize = 20;
 		int counter = 0;
@@ -230,7 +233,7 @@ public class UserRoleDaoImpl implements UserRoleDao {
 			System.out.println("batch insert Error " + e.getMessage());
 		}
 		return 0;
-	}
+	}*/
 
 	/**
 	 * parse ResultSet to UserRoles

@@ -28,7 +28,7 @@ public class TestUserDao {
 		assertEquals("Incorrect ", testUser.getLogin(), savedUser.getLogin());
 		assertEquals("Incorrect ", testUser.getBirthDate(), savedUser.getBirthDate());
 		assertEquals("Incorrect ", testUser.getPassword(), savedUser.getPassword());
-		userDaoImpl.Delete(savedUser);
+		userDaoImpl.delete(savedUser);
 	}
 
 	@Test
@@ -49,9 +49,9 @@ public class TestUserDao {
 		List<User> search = userDao.search(Long.toString(firstSavedUser.getId()));
 		assertEquals("incorrect number of records found", search.size(), testSize);
 		for (User user : search) {
-			userDao.Delete(user);
+			userDao.delete(user);
 		}
-		userDao.Delete(firstSavedUser);
+		userDao.delete(firstSavedUser);
 	}
 
 
