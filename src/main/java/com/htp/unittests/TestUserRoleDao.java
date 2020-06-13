@@ -9,13 +9,13 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import static org.junit.Assert.assertEquals;
 
 public class TestUserRoleDao {
-	private static ApplicationContext context;
+	private static final ApplicationContext context;
 	static {
 		context = new AnnotationConfigApplicationContext("com.htp");
 	}
 
 	@Test
-	public void userDaoSaveFindOneDelete() {
+	public void saveFindOneDelete() {
 		UserRoleDao userRoleDaoImpl = context.getBean(UserRoleDao.class);
 		UserRole testUserRole = new UserRole();
 		testUserRole.setUserId(1);
@@ -29,3 +29,4 @@ public class TestUserRoleDao {
 
 	}
 }
+

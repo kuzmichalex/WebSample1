@@ -11,13 +11,14 @@ import java.util.Random;
 import static org.junit.Assert.assertEquals;
 
 public class TestRoleDao {
-	private static ApplicationContext context;
+	private static final ApplicationContext context;
+	Random random = new Random();
 	static {
 		context = new AnnotationConfigApplicationContext("com.htp");
 	}
 
 	@Test
-	public void roleDaoSaveAndFinOne() {
+	public void saveFindOneDelete() {
 		RoleDao roleDao = context.getBean(RoleDao.class);
 		Role testRole = getRandomRole();
 		Role savedRole = roleDao.save(testRole);
@@ -26,7 +27,6 @@ public class TestRoleDao {
 	}
 
 	private Role getRandomRole() {
-		Random random = new Random();
 		random.nextDouble();
 		int randomValue = random.nextInt();
 		Role retRole = new Role();

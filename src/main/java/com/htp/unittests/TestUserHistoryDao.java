@@ -12,13 +12,14 @@ import java.util.Random;
 import static org.junit.Assert.assertEquals;
 
 public class TestUserHistoryDao {
-	private static ApplicationContext context;
+	private static final ApplicationContext context;
+	Random random = new Random();
 	static {
 		context = new AnnotationConfigApplicationContext("com.htp");
 	}
 
 	@Test
-	public void userDaoSaveAndFinOne() {
+	public void saveFindOneDelete() {
 		UserHistoryDao userHistoryDaoImpl = context.getBean(UserHistoryDao.class);
 		UserHistory testHistory = getSomeUserHistory();
 		UserHistory savedUserHistory = userHistoryDaoImpl.save(testHistory);
@@ -31,7 +32,6 @@ public class TestUserHistoryDao {
 	}
 
 	private UserHistory getSomeUserHistory() {
-		Random random = new Random();
 		UserHistory retValue = new UserHistory();
 		Date timestamp = new Date(System.currentTimeMillis());
 		retValue.setUserId(1);

@@ -16,13 +16,13 @@ public class TestTrainingDao {
 		context = new AnnotationConfigApplicationContext("com.htp");
 	}
 	@Test
-	public void testTrainingFindAll(){
+	public void findAll(){
 		TrainingDao traningDao = context.getBean(TrainingDao.class);
 		List<Training> all = traningDao.findAll();
 		assertFalse("training count too small" + all.size(), all.isEmpty());
 	}
 	@Test
-	public void testTrainingSaveDelete(){
+	public void saveFindOneDelete(){
 		TrainingDao trainingDao = context.getBean(TrainingDao.class);
 		Training training = new Training();
 		training.setName("Running");

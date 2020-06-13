@@ -14,13 +14,14 @@ import java.util.Random;
 import static org.junit.Assert.assertEquals;
 
 public class TestUserDao {
-	private static ApplicationContext context;
+	private static final ApplicationContext context;
+	Random random = new Random();
 	static {
 		context = new AnnotationConfigApplicationContext("com.htp");
 	}
 
 	@Test
-	public void userDaoSaveFinOneUpdateDelete() {
+	public void saveFinOneUpdateDelete() {
 		UserDao userDaoImpl = context.getBean(UserDao.class);
 		User testUser = getRandomUser();
 		User savedUser = userDaoImpl.save(testUser);
@@ -40,7 +41,7 @@ public class TestUserDao {
 	}
 
 	@Test
-	public void userDaoBatchInsertSearch(){
+	public void batchInsertSearch(){
 		final int testSize = 33;
 		UserDao userDao = context.getBean(UserDao.class);
 		List<User> testUsers = new ArrayList<>();
@@ -50,10 +51,7 @@ public class TestUserDao {
 		}
 		final int countSaved = userDao.insertBatch(testUsers);
 		assertEquals("incorrect number of saved records", testSize, countSaved);
-/*
-		попробуем прибрать за собой, удалив пользователей с ID firstSavedUser;
-		Да уж, тест себе такой. Если что-то сломается, то в базе может остаться мусор.
-*/
+
 		List<User> search = userDao.search(firstSavedUser.getId());
 		assertEquals("incorrect number of records found", search.size(), testSize);
 		for (User user : search) {
@@ -62,10 +60,7 @@ public class TestUserDao {
 		userDao.delete(firstSavedUser);
 	}
 
-
-
 	private User getRandomUser(){
-		Random random = new Random();
 		random.nextDouble();
 		int randomValue = random.nextInt();
 
