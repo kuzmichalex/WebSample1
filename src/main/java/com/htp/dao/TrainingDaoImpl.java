@@ -39,14 +39,6 @@ public class TrainingDaoImpl implements TrainingDao {
 		return training;
 	}
 
-	Map<String, Object> getColumnMap(Training training) {
-		columnMap.put(TRAINING_ID, training.getId());
-		columnMap.put(TRAINING_NAME, training.getName());
-		columnMap.put(TRAINING_DESCRIPTION, training.getDescription());
-		columnMap.put(TRAINING_AUTHOR_USER_ID, training.getUserAuthorId());
-		return columnMap;
-	}
-
 
 	@Override
 	public List<Training> findAll() {

@@ -20,19 +20,27 @@ public class TestUserDao {
 	}
 
 	@Test
-	public void userDaoSaveAndFinOne() {
+	public void userDaoSaveFinOneUpdateDelete() {
 		UserDao userDaoImpl = context.getBean(UserDao.class);
 		User testUser = getRandomUser();
 		User savedUser = userDaoImpl.save(testUser);
-		assertEquals("Incorrect ", testUser.getName(), savedUser.getName());
-		assertEquals("Incorrect ", testUser.getLogin(), savedUser.getLogin());
-		assertEquals("Incorrect ", testUser.getBirthDate(), savedUser.getBirthDate());
-		assertEquals("Incorrect ", testUser.getPassword(), savedUser.getPassword());
+		assertEquals("Incorrect saved name", testUser.getName(), savedUser.getName());
+		assertEquals("Incorrect saved login", testUser.getLogin(), savedUser.getLogin());
+		assertEquals("Incorrect saved birthday", testUser.getBirthDate(), savedUser.getBirthDate());
+		assertEquals("Incorrect saved password", testUser.getPassword(), savedUser.getPassword());
+
+		savedUser.setName(savedUser.getName()+"_2");
+		savedUser.setLogin(savedUser.getLogin()+"_2");
+		savedUser.setPassword(savedUser.getPassword()+"_2");
+		final User updatedUser = userDaoImpl.update(savedUser);
+		assertEquals("Incorrect updated name", savedUser.getName(), updatedUser.getName());
+		assertEquals("Incorrect updated login", savedUser.getLogin(), updatedUser.getLogin());
+		assertEquals("Incorrect updated password", savedUser.getPassword(), updatedUser.getPassword());
 		userDaoImpl.delete(savedUser);
 	}
 
 	@Test
-	public void userDaoBatchInsertAndSearch(){
+	public void userDaoBatchInsertSearch(){
 		final int testSize = 33;
 		UserDao userDao = context.getBean(UserDao.class);
 		List<User> testUsers = new ArrayList<>();
@@ -46,7 +54,7 @@ public class TestUserDao {
 		попробуем прибрать за собой, удалив пользователей с ID firstSavedUser;
 		Да уж, тест себе такой. Если что-то сломается, то в базе может остаться мусор.
 */
-		List<User> search = userDao.search(Long.toString(firstSavedUser.getId()));
+		List<User> search = userDao.search(firstSavedUser.getId());
 		assertEquals("incorrect number of records found", search.size(), testSize);
 		for (User user : search) {
 			userDao.delete(user);
