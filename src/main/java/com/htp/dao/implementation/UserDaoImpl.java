@@ -1,5 +1,6 @@
-package com.htp.dao;
+package com.htp.dao.implementation;
 
+import com.htp.dao.UserDao;
 import com.htp.domain.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -60,7 +61,6 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public List<User> search(long itemId) {
-		System.out.println("search " + itemId);
 		final String searchQuery = "select * from m_users where id > :id";
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue(USER_ID, itemId);
@@ -92,6 +92,7 @@ public class UserDaoImpl implements UserDao {
 		params.addValue(USER_LOGIN, item.getLogin());
 		params.addValue(USER_PASSWORD, item.getPassword());
 		params.addValue(USER_BIRTHDAY, item.getBirthDate());
+
 		namedParameterJdbcTemplate.update(insertQuery, params, keyHolder);
 		long createdItemId = (Long) Objects.requireNonNull(keyHolder.getKeys()).get(USER_ID);
 		return findOne(createdItemId);
@@ -114,10 +115,11 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public int delete(User user) {
-		final String deleteQuery = "delete from m_users where id=?";
-		//TODO
-		return 0;
+	public int delete(User item) {
+		final String deleteQuery = "delete from m_users where id = :id";
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue(USER_ID, item.getId());
+		return namedParameterJdbcTemplate.update(deleteQuery, params);
 	}
 
 
@@ -128,17 +130,17 @@ public class UserDaoImpl implements UserDao {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public int insertBatch(List<User> users) {
 		String saveQuery = "insert into m_users ( login, name, birth_date, password) values( :login, :name, :birth_date, :password)";
-		List<SqlParameterSource> batch = new ArrayList<>();
+		List<SqlParameterSource> batchParamList = new ArrayList<>();
 		for (User user : users) {
 			MapSqlParameterSource params = new MapSqlParameterSource();
 			params.addValue(USER_LOGIN, user.getLogin());
 			params.addValue(USER_NAME, user.getName());
 			params.addValue(USER_BIRTHDAY, user.getBirthDate());
 			params.addValue(USER_PASSWORD, user.getPassword());
-			batch.add(params);
+			batchParamList.add(params);
 		}
-		int size = batch.size();
-		namedParameterJdbcTemplate.batchUpdate(saveQuery, batch.toArray(new SqlParameterSource[size]));
+		int size = batchParamList.size();
+		namedParameterJdbcTemplate.batchUpdate(saveQuery, batchParamList.toArray(new SqlParameterSource[size]));
 		return size;
 	}
 

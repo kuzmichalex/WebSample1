@@ -1,5 +1,6 @@
 package com.htp.domain;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -10,7 +11,7 @@ public class UserHistory {
 
 	private long id;
 	private long userId;
-	private Timestamp date;
+	private Date date;
 	private int weight;
 	private int height;
 
@@ -33,11 +34,11 @@ public class UserHistory {
 		this.userId = userId;
 	}
 
-	public Timestamp getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(Timestamp date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 

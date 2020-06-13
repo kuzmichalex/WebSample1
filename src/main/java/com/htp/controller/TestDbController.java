@@ -1,17 +1,11 @@
 package com.htp.controller;
 
-import com.htp.dao.UserDao;
-import com.htp.dao.UserDaoImpl;
-import com.htp.domain.User;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Iterator;
-import java.util.List;
 
 public class TestDbController extends HttpServlet {
 	public TestDbController() {

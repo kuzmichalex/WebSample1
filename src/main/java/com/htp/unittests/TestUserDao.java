@@ -1,4 +1,4 @@
-package com.htp.unitTests;
+package com.htp.unittests;
 
 import com.htp.dao.UserDao;
 import com.htp.domain.User;

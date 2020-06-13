@@ -1,5 +1,6 @@
-package com.htp.dao;
+package com.htp.dao.implementation;
 
+import com.htp.dao.TrainingDao;
 import com.htp.domain.Training;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -18,11 +19,9 @@ public class TrainingDaoImpl implements TrainingDao {
 	public static final String TRAINING_NAME = "name";
 	public static final String TRAINING_DESCRIPTION = "description";
 	public static final String TRAINING_AUTHOR_USER_ID = "author_user_id";
-	private final Map<String, Object> columnMap = new HashMap<String, Object>();
 
-
-	private JdbcTemplate jdbcTemplate;
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	private final JdbcTemplate jdbcTemplate;
+	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public TrainingDaoImpl(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
@@ -30,7 +29,6 @@ public class TrainingDaoImpl implements TrainingDao {
 	}
 
 	private Training trainingRowMapper(ResultSet resultSet, int i) throws SQLException {
-		System.out.println("resultSet   " + resultSet);
 		Training training = new Training();
 		training.setId(resultSet.getLong(TRAINING_ID));
 		training.setName(resultSet.getString(TRAINING_NAME));
@@ -72,30 +70,29 @@ public class TrainingDaoImpl implements TrainingDao {
 		params.addValue(TRAINING_AUTHOR_USER_ID, item.getUserAuthorId());
 		namedParameterJdbcTemplate.update(insertQuery, params, keyHolder);
 		long createdItemId = (Long) Objects.requireNonNull(keyHolder.getKeys()).get(TRAINING_ID);
-
-		System.out.println("createdItemId " + createdItemId);
-
-		/*try {
-			namedParameterJdbcTemplate.update(saveQuery, getColumnMap(item));
-		}catch (DataAccessException e){
-			return null;
-
-		}   */
-		return null;
+		return findOne(createdItemId);
 	}
 
 	@Override
-	public Training update(Training training) {
-		return null;
+	public Training update(Training item) {
+		final String updateQuery = "update m_trainings set name = :name, description = :description, author_user_id = :author_user_id where id = :id";
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		params.addValue(TRAINING_NAME, item.getName());
+		params.addValue(TRAINING_DESCRIPTION, item.getDescription());
+		params.addValue(TRAINING_AUTHOR_USER_ID, item.getUserAuthorId());
+		params.addValue(TRAINING_ID, item.getId());
+		namedParameterJdbcTemplate.update(updateQuery, params, keyHolder);
+		long updatedItemId = (Long) Objects.requireNonNull(keyHolder.getKeys()).get(TRAINING_ID);
+		return findOne(updatedItemId);
 	}
 
 	@Override
-	public int delete(Training training) {
-		return 0;
+	public int delete(Training item) {
+		final String deleteQuery = "delete from m_trainings where id = :id";
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue(TRAINING_ID, item.getId());
+		return namedParameterJdbcTemplate.update(deleteQuery, params);
 	}
 
-	@Override
-	public int insertBatch(List<Training> trainings) {
-		return 0;
-	}
 }
