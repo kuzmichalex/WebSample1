@@ -6,16 +6,17 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 @Component
 @Aspect
 public class DaoInvokeCountAspect {
 	private static final ConcurrentHashMap<String, Integer> methodInvocationsCounter = new ConcurrentHashMap<>();
 
-	public static ConcurrentMap<String, Integer> getMethodInvocationsCounter() {
-		return methodInvocationsCounter;
+	public static Map<String, Integer> getMethodInvocationsCounter() {
+		return new HashMap<>(methodInvocationsCounter);
 	}
 
 	//Указываем, куда будет внедряться логика. В данном случае в DAO-методы
@@ -24,9 +25,8 @@ public class DaoInvokeCountAspect {
 
 	@Before("beforeDaoPointcut()")
 	public void logBefore(JoinPoint joinPoint) {
-		final String methodName = joinPoint.getSignature().getDeclaringType() + joinPoint.getSignature().getName();
+		final String methodName = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
 		methodInvocationsCounter.merge(methodName, 1, Integer::sum);
-		//System.out.println(methodName + " " + methodInvocationsCounter.get(methodName));
 	}
 }
 

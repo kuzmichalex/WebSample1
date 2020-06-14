@@ -9,8 +9,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -100,61 +98,6 @@ public class UserRoleDaoImpl implements UserRoleDao {
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue(ID, item.getId());
 		return namedParameterJdbcTemplate.update(deleteQuery, params);
-	}
-
-	/**
-	 * batch insert
-	 *
-	 *@param userRoles list of userRoless needed to insert into table
-	 * @return number or userRoless inserted.
-	 * if an error occurs, no userRoless will be added
-	 */
-/*	@Override
-	public int insertBatch(List<UserRole> userRoles) {
-		final int batchSize = 20;
-		int counter = 0;
-		boolean autoCommit;
-
-		String saveQuery = "insert into l_user_roles ( user_id, role_id) values( ?, ?)";
-		try (Connection connection = dataSource.getConnection();
-		     PreparedStatement insertStatement = connection.prepareStatement(saveQuery);
-		) {
-			//Запрещаем авто-комммит
-			autoCommit = connection.getAutoCommit();
-			connection.setAutoCommit(false);
-
-			for (UserRole userRoleRec : userRoles) {
-				insertStatement.setString(1, Long.toString(userRoleRec.getUserId()));
-				insertStatement.setString(2, Long.toString(userRoleRec.getRoleId()));
-
-				insertStatement.addBatch();
-				//исполнять будем каждые batchSize записей
-				if (++counter % batchSize == 0) {
-					insertStatement.executeBatch();
-				}
-			}
-			insertStatement.executeBatch();
-			connection.commit();
-			connection.setAutoCommit(autoCommit);
-			return counter;
-		} catch (SQLException e) {
-			System.out.println("batch insert Error " + e.getMessage());
-		}
-		return 0;
-	}*/
-
-	/**
-	 * parse ResultSet to UserRoles
-	 *
-	 * @param resultSet
-	 * @return UserRoles
-	 */
-	private UserRole parseUserRoles(ResultSet resultSet) throws SQLException {
-		UserRole userRoles = new UserRole();
-		userRoles.setId(resultSet.getLong(ID));
-		userRoles.setUserId(Long.parseLong(resultSet.getString(USER_ID)));
-		userRoles.setRoleId(Long.parseLong(resultSet.getString(ROLE_ID)));
-		return userRoles;
 	}
 
 }

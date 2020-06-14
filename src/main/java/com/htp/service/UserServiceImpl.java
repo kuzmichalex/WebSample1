@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
-	private UserDao userDao;
+	private final UserDao userDao;
 
 	//@Qualifier("userRepositoryJdbcTemplate" нужен, чтобы заавтовайрилось.
-	public UserServiceImpl(@Qualifier("userRepositoryJdbcTemplate")UserDao userDao) {
+	public UserServiceImpl(@Qualifier("userRepositoryJdbcTemplate") UserDao userDao) {
 		this.userDao = userDao;
 	}
 
@@ -23,12 +23,10 @@ public class UserServiceImpl implements UserService{
 		return userDao.findAll();
 	}
 
-	@Override
 	public List<User> search(String searchParam) {
-		return null;
+		return userDao.search(Long.parseLong(searchParam));
 	}
 
-	@Override
 	public Optional<User> findById(Long userId) {
 		return Optional.empty();
 	}
@@ -40,26 +38,25 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User save(User user) {
-		return null;
+		return userDao.save(user);
 	}
 
 	@Override
 	public User update(User user) {
-		return null;
+		return userDao.update(user);
 	}
 
 	@Override
 	public int delete(User user) {
-		return 0;
+		return userDao.delete(user);
 	}
 
-	@Override
+	public Optional<User> findById(long itemId) {
+		return userDao.findById(itemId);
+	}
+
 	public int insertBatch(List<User> items) {
-		return 0;
+		return userDao.insertBatch(items);
 	}
 
-	@Override
-	public List<User> search(long itemId) {
-		return null;
-	}
 }

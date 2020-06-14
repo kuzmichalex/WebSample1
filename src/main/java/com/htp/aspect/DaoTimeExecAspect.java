@@ -19,11 +19,11 @@ public class DaoTimeExecAspect {
 
 	@Around("aroundDaoImplPointcut()")
 	public Object logAroundMethods(ProceedingJoinPoint joinPoint) throws Throwable {
-		final String methodName = joinPoint.getSignature().getDeclaringType() + joinPoint.getSignature().getName();
+		final String methodName = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
 		final long startTime = System.currentTimeMillis();
 		Object proceed = joinPoint.proceed();
 		final long stopTime = System.currentTimeMillis();
-		log.info("execution time " + methodName + ":" + (stopTime - startTime));
+		log.info("execution time (millis) " + methodName + " :" + (stopTime - startTime));
 		return proceed;
 	}
 }
