@@ -30,7 +30,7 @@ public class UserController {
 		return "users/user";
 	}
 
-	@GetMapping("/search{id}")
+	@GetMapping("/search")
 	public String searchUser(@RequestParam("id") String query, ModelMap modelMap) {
 		modelMap.addAttribute("users", userService.search(query));
 		return "users/users";
