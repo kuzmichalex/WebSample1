@@ -11,6 +11,21 @@
     <title>user.jsp</title>
 </head>
 <body>
-    user.jsp
+    <h1>user.jsp</h1>
+    <hr>
+    <table>
+        <tr>
+            <td>Id</td>
+            <td>login</td>
+            <td>name</td>
+            <td>password</td>
+        </tr>
+        <tr>
+            <td>${user.id}</td>
+            <td>${user.login}</td>
+            <td>${user.name}</td>
+            <td>${user.password}</td>
+        </tr>
+    </table>
 </body>
 </html>

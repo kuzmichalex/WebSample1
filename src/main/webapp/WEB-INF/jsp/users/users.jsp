@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: sasha
@@ -12,5 +13,22 @@
 </head>
 <body>
 <h1>users.jsp</h1>
+<table>
+    <tr>
+        <td>id</td>
+        <td>login</td>
+        <td>name</td>
+        <td>password</td>
+    </tr>
+    <c:forEach var="user" items="${users}">
+        <tr>
+            <td>${user.id}</td>
+            <td>${user.login}</td>
+            <td>${user.name}</td>
+            <td>${user.password}</td>
+        </tr>
+    </c:forEach>
+</table>
+
 </body>
 </html>

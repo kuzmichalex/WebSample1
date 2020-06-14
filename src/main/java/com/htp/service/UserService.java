@@ -19,4 +19,8 @@ public interface UserService {
 	User update(User user);
 
 	int delete(User user);
+
+	int insertBatch(List<User> items);
+
+	public List<User> search(long itemId);
 }

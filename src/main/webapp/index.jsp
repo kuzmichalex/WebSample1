@@ -9,6 +9,11 @@
 <body>
 
 <h1>index.jsp <br></h1>
+<hr>
+
+<a href="${pageContext.request.contextPath}/users">all users</a> <br>
+<a href="${pageContext.request.contextPath}/users/1">users id = 1</a>
+
 
 </body>
 

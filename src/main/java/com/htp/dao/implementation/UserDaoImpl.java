@@ -24,7 +24,8 @@ import java.util.Optional;
  */
 
 //Аннотация указывает спрингу, что класс применяется для доступа к базе данных (DAO)
-@Repository
+//В UserServiceImpl применим @Qualifier("userRepositoryJdbcTemplate")
+@Repository("userRepositoryJdbcTemplate")
 public class UserDaoImpl implements UserDao {
 	//Наименования колонок в таблице m_user
 	public static final String USER_ID = "id";

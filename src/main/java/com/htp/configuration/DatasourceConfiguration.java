@@ -50,6 +50,7 @@ public class DatasourceConfiguration {
 	 */
 	@Bean
 	public DataSource generateDatasource() {
+		System.out.println("generateDatasource()");
 		//Создаём и настраиваем конфигурацию для пула коннекшонов
 		HikariConfig hikariConfig = new HikariConfig();
 		hikariConfig.setDriverClassName(driverName);
