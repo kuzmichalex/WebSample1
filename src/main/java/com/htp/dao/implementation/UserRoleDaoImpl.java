@@ -20,7 +20,7 @@ import java.util.Optional;
  */
 
 //Аннотация указывает спрингу, что класс применяется для доступа к базе данных (DAO)
-@Repository
+@Repository("userRoleRepositoryJdbcTemplate")
 public class UserRoleDaoImpl implements UserRoleDao {
 	//Наименования колонок в таблице m_userRoles
 	public static final String ID = "id";

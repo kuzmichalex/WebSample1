@@ -13,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-@Repository
+@Repository("TrainingRepositoryJdbcTemplate")
 public class TrainingDaoImpl implements TrainingDao {
 	public static final String TRAINING_ID = "id";
 	public static final String TRAINING_NAME = "name";

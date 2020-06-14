@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Repository
+@Repository("userHistoryRepositoryJdbcTemplate")
 public class UserHistoryDaoImpl implements UserHistoryDao {
 	public static final String USER_HIST_ID = "id";
 	public static final String USER_HIST_USER_ID = "user_id";
