@@ -5,6 +5,7 @@ import com.htp.service.RoleService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -19,14 +20,23 @@ public class RoleController {
 	}
 
 	@GetMapping
-	public String findAll(ModelMap modelMap){
+	public String   findAll(ModelMap modelMap){
 		modelMap.addAttribute("roles", roleService.findAll());
 		return "/roles/roles";
 	}
 
+	@PutMapping("/create")
+	public String createUser(@RequestParam("roleName") String roleName, ModelMap modelMap) {
+		Role role = new Role();
+		role.setRoleName(roleName);
+		roleService.save(role);
+		modelMap.addAttribute("roles", roleService.findAll());
+		return "/roles/roles";
+
+	}
 
 	@GetMapping("/create")
-	public String searchUser(@RequestParam("roleName") String roleName, ModelMap modelMap) {
+	public String createUser2(@RequestParam("roleName") String roleName, ModelMap modelMap) {
 		Role role = new Role();
 		role.setRoleName(roleName);
 		roleService.save(role);

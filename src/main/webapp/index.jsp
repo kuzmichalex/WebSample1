@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <meta http-equiv="Content-Type"
@@ -21,7 +21,14 @@
 <a href="${pageContext.request.contextPath}/roles/create?roleName=new_role">create Role</a> <br>
 
 <hr>
+<form method = "PUT" action = "${pageContext.request.contextPath}/roles/create">
+                <label accesskey="roleName">
+                    <input name="roleName" value="test_role">
+                </label>
+                <input type = "submit" value = "create"/>
+</form>
 
+<hr>
 <a href="${pageContext.request.contextPath}/statistics">methods invocation statistics</a>
 </body>
 
