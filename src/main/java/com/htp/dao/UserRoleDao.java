@@ -8,4 +8,6 @@ import com.htp.domain.UserRole;
  * */
 public interface UserRoleDao extends GenericDao <UserRole, Long>{
 
+	interface UserRoles extends GenericDao {
+	}
 }
