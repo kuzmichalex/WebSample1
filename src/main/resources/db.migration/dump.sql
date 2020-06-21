@@ -268,10 +268,10 @@ create unique index m_activity_id_uindex
     on m_activity (id);
 
 create index m_activity_id_user_index
-    on m_activity (id_user);
+    on m_activity (user_id);
 
 create index m_activity_id_group_index
-    on m_activity (id_group);
+    on m_activity (group_id);
 
 create table m_training_programs
 (
