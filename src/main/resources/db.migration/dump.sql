@@ -1,7 +1,3 @@
-create schema public;
-
-alter schema public owner to postgres;
-
 create table m_users
 (
     id bigserial not null
@@ -63,7 +59,8 @@ create table m_features
         constraint m_training_features_pk
             primary key,
     description varchar(200) not null,
-    name varchar(50) not null
+    name varchar(50) not null,
+    is_deleted boolean default false not null
 );
 
 alter table m_features owner to postgres;
@@ -102,12 +99,13 @@ create table l_training_features
     id bigserial not null
         constraint l_training_features_pk
             primary key,
-    id_training bigint not null
+    training_id bigint not null
         constraint l_training_features_m_trainings_id_fk
             references m_trainings,
-    id_feature bigserial not null
+    feature_id bigint not null
         constraint l_training_features_m_features_id_fk
-            references m_features
+            references m_features,
+    is_deleted boolean default false not null
 );
 
 alter table l_training_features owner to postgres;
@@ -116,19 +114,19 @@ create unique index l_training_features_id_uindex
     on l_training_features (id);
 
 create unique index l_training_features_id_feature_id_training_uindex
-    on l_training_features (id_feature, id_training);
+    on l_training_features (feature_id, training_id);
 
 create table m_user_history
 (
-    id bigserial not null
+    id      bigserial    not null
         constraint m_user_info_pk
             primary key,
-    user_id bigserial not null
+    user_id bigserial    not null
         constraint m_user_history_m_users_id_fk
             references m_users,
-    date timestamp(6) not null,
-    weight integer not null,
-    height integer not null
+    date    timestamp(6) not null,
+    weight  integer      not null,
+    height  integer      not null
 );
 
 alter table m_user_history owner to postgres;
@@ -175,15 +173,18 @@ create table l_training_levels
     id bigserial not null
         constraint l_training_levels_pk
             primary key,
-    id_training bigserial not null
+    training_id bigint not null
         constraint l_training_levels_m_trainings_id_fk
             references m_trainings,
-    id_level bigserial not null
+    level_id bigint not null
         constraint l_training_levels_m_levels_id_fk
             references m_levels,
     repetitions_min integer not null,
     repetitions_max integer,
-    description varchar(200)
+    description varchar(200),
+    time_min integer,
+    time_max integer,
+    is_deleted boolean default false not null
 );
 
 alter table l_training_levels owner to postgres;
@@ -192,7 +193,7 @@ create unique index l_training_levels_id_uindex
     on l_training_levels (id);
 
 create unique index l_training_levels_id_training_id_level_uindex
-    on l_training_levels (id_training, id_level);
+    on l_training_levels (training_id, level_id);
 
 create table l_user_groups
 (
