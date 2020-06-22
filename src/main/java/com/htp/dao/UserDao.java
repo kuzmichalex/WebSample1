@@ -13,5 +13,5 @@ public interface UserDao extends GenericDao <User, Long> {
 
 	int insertBatch(List<User> items);
 
-	public List<User> search(long itemId);
+	List<User> search(long itemId);
 }
