@@ -1,6 +1,7 @@
 package com.htp.controller;
 
 import com.htp.controller.request.RoleCreateRequest;
+import com.htp.controller.request.RoleUpdateRequest;
 import com.htp.domain.Role;
 import com.htp.service.RoleService;
 import io.swagger.annotations.*;
@@ -17,6 +18,7 @@ import java.util.Optional;
 @RequestMapping("/role")
 public class RoleController {
 	private final RoleService roleService;
+
 	public RoleController(RoleService roleService) {
 		this.roleService = roleService;
 	}
@@ -27,7 +29,7 @@ public class RoleController {
 			@ApiResponse(code = 500, message = "Something's wrong. Roles ran away") //Сообщение, что всё плохо
 	})
 	@GetMapping
-	public ResponseEntity<List<Role>> findAll(ModelMap modelMap){
+	public ResponseEntity<List<Role>> findAll(){
 		return new ResponseEntity<>(roleService.findAll(), HttpStatus.OK);
 	}
 
@@ -93,10 +95,10 @@ public class RoleController {
 			@ApiResponse(code = 500, message = "Server error, something wrong")
 	})
 	@PutMapping("/update")
-	public Role update(@Valid @RequestBody RoleCreateRequest createRequest) {
+	public Role update(@Valid @RequestBody RoleUpdateRequest updateRequest) {
 		Role role = new Role();
-		role.setRoleName(createRequest.getRoleName());
+		role.setId(updateRequest.getId());
+		role.setRoleName(updateRequest.getRoleName());
 		return roleService.update(role);
 	}
-
 }

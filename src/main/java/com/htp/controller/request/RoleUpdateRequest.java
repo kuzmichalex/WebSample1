@@ -25,7 +25,11 @@ import javax.validation.constraints.Size;
 @Builder
 @ApiModel(description = "User creation model")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class RoleCreateRequest {
+public class RoleUpdateRequest {
+
+	@NotNull
+	@ApiModelProperty(required = true, dataType = "long", notes = "Role ID")
+	private long id;
 
 	@NotNull
 	@NotEmpty
