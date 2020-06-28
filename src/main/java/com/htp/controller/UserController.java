@@ -77,4 +77,20 @@ public class UserController {
 		user.setPassword(createRequest.getPassword());
 		return userService.save(user);
 	}
+
+	@ApiOperation(value = "Create user")
+	@ApiResponses({
+			@ApiResponse(code = 201, message = "Successful creation user"),
+			@ApiResponse(code = 422, message = "Failed user creation properties validation"),
+			@ApiResponse(code = 500, message = "Server error, something wrong")
+	})
+	@PostMapping("/update")
+	public User update(@Valid @RequestBody UserCreateRequest createRequest) {
+		User user = new User();
+		user.setLogin(createRequest.getLogin());
+		user.setName(createRequest.getName());
+		user.setBirthDate(createRequest.getBirthDate());
+		user.setPassword(createRequest.getPassword());
+		return userService.update(user);
+	}
 }

@@ -86,4 +86,17 @@ public class RoleController {
 		return roleService.save(role);
 	}
 
+	@ApiOperation(value = "Update role")
+	@ApiResponses({
+			@ApiResponse(code = 201, message = "Successful creation user"),
+			@ApiResponse(code = 422, message = "Failed user creation properties validation"),
+			@ApiResponse(code = 500, message = "Server error, something wrong")
+	})
+	@PutMapping("/update")
+	public Role update(@Valid @RequestBody RoleCreateRequest createRequest) {
+		Role role = new Role();
+		role.setRoleName(createRequest.getRoleName());
+		return roleService.update(role);
+	}
+
 }
