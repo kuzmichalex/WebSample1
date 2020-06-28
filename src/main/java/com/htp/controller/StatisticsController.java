@@ -1,25 +1,27 @@
 package com.htp.controller;
 
-import com.htp.aspect.DaoInvokeCountAspect;
-import org.springframework.stereotype.Controller;
+import com.htp.service.StatisticsService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/statistics")
 public class StatisticsController {
+	private final StatisticsService statisticsService;
+
+	public StatisticsController(StatisticsService statisticsService) {
+		this.statisticsService = statisticsService;
+	}
+
 
 	@GetMapping
-	public String statistics(ModelMap modelMap) {
-		final Map<String, Integer> methodInvocationsCounter = DaoInvokeCountAspect.getMethodInvocationsCounter();
-		StringBuilder statistics = new StringBuilder();
-		for (Map.Entry<String, Integer> stringIntegerEntry : methodInvocationsCounter.entrySet()) {
-			statistics.append(stringIntegerEntry.getKey()).append(" : ").append(stringIntegerEntry.getValue()).append("<br>");
-			modelMap.addAttribute("statisticsAttribute", statistics.toString());
-		}
-		return "statistics";
+	public ResponseEntity<Map<String, Integer>> statistics(ModelMap modelMap) {
+		return new ResponseEntity<Map<String, Integer>>(statisticsService.getStatistics(), HttpStatus.OK);
 	}
 }
