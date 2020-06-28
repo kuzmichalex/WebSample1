@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Repository("featureRepositoryJdbcTemplate")
+@Repository("trainingFeaturesRepositoryJdbcTemplate")
 public class TrainingFeaturesDaoImpl implements TrainingFeaturesDao {
 	public static final String ID = "id";
 	public static final String TRAINING_ID = "training_id";

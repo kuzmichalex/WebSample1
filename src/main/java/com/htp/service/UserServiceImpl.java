@@ -23,12 +23,13 @@ public class UserServiceImpl implements UserService {
 		return userDao.findAll();
 	}
 
-	public List<User> search(String searchParam) {
-		return userDao.search(Long.parseLong(searchParam));
+	@Override
+	public Optional<User> findByLogin(String login) {
+		return userDao.findByLogin(login);
 	}
 
 	public Optional<User> findById(Long userId) {
-		return Optional.empty();
+		return userDao.findById(userId);
 	}
 
 	@Override

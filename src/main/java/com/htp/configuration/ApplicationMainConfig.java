@@ -6,9 +6,9 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@ComponentScan("com.htp")
-@EnableAspectJAutoProxy(proxyTargetClass = true)
-@Import({DatasourceConfiguration.class,
-		BeanConfiguration.class})
+//@ComponentScan("com.htp")
+//@EnableAspectJAutoProxy(proxyTargetClass = true)
+//@Import({DatasourceConfiguration.class,
+//		BeanConfiguration.class})
 public class ApplicationMainConfig {
 }

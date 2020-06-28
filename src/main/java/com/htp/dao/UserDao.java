@@ -4,6 +4,7 @@ package com.htp.dao;
 import com.htp.domain.User;
 
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  * */
 public interface UserDao extends GenericDao <User, Long> {
 
-	int insertBatch(List<User> items);
+	Optional<User> findByLogin(String login);
 
-	List<User> search(long itemId);
+	int insertBatch(List<User> items);
 }

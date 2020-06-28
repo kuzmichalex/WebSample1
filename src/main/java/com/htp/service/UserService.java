@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface UserService {
 	List<User> findAll();
 
-	List<User> search(String searchParam);
-
 	Optional<User> findById(Long userId);
+
+	Optional<User> findByLogin(String login);
 
 	User findOne(Long userId);
 

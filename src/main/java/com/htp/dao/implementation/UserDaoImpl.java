@@ -60,12 +60,11 @@ public class UserDaoImpl implements UserDao {
 		return jdbcTemplate.query(findAllQuery, this::rowMapper);
 	}
 
-	@Override
-	public List<User> search(long itemId) {
-		final String searchQuery = "select * from m_users where id > :id";
+	public Optional<User> findByLogin(String login) {
+		final String searchQuery = "select * from m_users where login = :login";
 		MapSqlParameterSource params = new MapSqlParameterSource();
-		params.addValue(USER_ID, itemId);
-		return namedParameterJdbcTemplate.query(searchQuery, params, this::rowMapper);
+		params.addValue(USER_LOGIN, login);
+		return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(searchQuery, params, this::rowMapper));
 	}
 
 	@Override
