@@ -2,6 +2,7 @@ package com.htp.dao.implementation;
 
 import com.htp.dao.RoleDao;
 import com.htp.domain.Role;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -56,6 +57,18 @@ public class RoleDaoImpl implements RoleDao {
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue(ROLE_ID, itemId);
 		return namedParameterJdbcTemplate.queryForObject(searchByIDQuery, params, this::rowMapper);
+	}
+
+	@Override
+	public Optional<Role> findByRoleName(String roleName) {
+		final String searchByIDQuery = "select * from m_roles where role_name = :role_name";
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue(ROLE_NAME, roleName);
+		try {
+			return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(searchByIDQuery, params, this::rowMapper));
+		}catch(EmptyResultDataAccessException e){
+			return Optional.empty();
+		}
 	}
 
 	@Override

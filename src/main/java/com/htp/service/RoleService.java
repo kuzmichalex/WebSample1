@@ -10,6 +10,8 @@ public interface RoleService {
 
 	Optional<Role> findById(Long RoleId);
 
+	Optional<Role> findByRoleName(String name);
+
 	Role findOne(Long RoleId);
 
 	Role save(Role Role);

@@ -1,48 +1,78 @@
 package com.htp.controller;
 
+import com.htp.controller.request.RoleCreateRequest;
+import com.htp.controller.request.UserCreateRequest;
 import com.htp.domain.Role;
+import com.htp.domain.User;
 import com.htp.service.RoleService;
-import org.springframework.stereotype.Controller;
+import io.swagger.annotations.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/roles")
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/role")
 public class RoleController {
 	private final RoleService roleService;
-
-	//RoleService заавтовайрится, тк класс UserServiceImpl аннотирован @Service
-	public RoleController(RoleService userService) {
-		this.roleService = userService;
+	public RoleController(RoleService roleService) {
+		this.roleService = roleService;
 	}
 
+	@ApiOperation(value = "Find all roles") //Наименование в документации
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Ok. All roles found"),              //Сообщение об успешном поиске
+			@ApiResponse(code = 500, message = "Something's wrong. Roles ran away") //Сообщение, что всё плохо
+	})
 	@GetMapping
-	public String   findAll(ModelMap modelMap){
-		modelMap.addAttribute("roles", roleService.findAll());
-		return "/roles/roles";
+	public ResponseEntity<List<Role>> findAll(ModelMap modelMap){
+		return new ResponseEntity<>(roleService.findAll(), HttpStatus.OK);
 	}
 
+	@ApiOperation(value = "Finding Role by id")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Successful loading user"),
+			@ApiResponse(code = 500, message = "Server error, something wrong")
+	})
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "id", value = "Role database id", example = "1", required = true, dataType = "long", paramType = "path")
+	})
+	@GetMapping("/{id}")
+	public Role findById(@PathVariable("id") Long userId, ModelMap modelMap) {
+		return roleService.findOne(userId);
+	}
+
+
+	@ApiOperation(value = "Search role by name")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Successful loading user"),
+			@ApiResponse(code = 500, message = "Server error, something wrong")
+	})
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "name", value = "Search query role name", example = "ROLE_ADMINISTRATOR", required = true, dataType = "string", paramType = "query")
+	})
+	@GetMapping("/search")
+	public Role searchUser(@RequestParam("login") String login, ModelMap modelMap) {
+		//modelMap.addAttribute("users", userService.search(login));]
+		final Optional<Role> byRoleName = roleService.findByRoleName(login);
+		return byRoleName.orElse(null);
+	}
+
+	@ApiOperation(value = "Create role")
+	@ApiResponses({
+			@ApiResponse(code = 201, message = "Successful creation user"),
+			@ApiResponse(code = 422, message = "Failed user creation properties validation"),
+			@ApiResponse(code = 500, message = "Server error, something wrong")
+	})
 	@PutMapping("/create")
-	public String createUser(@RequestParam("roleName") String roleName, ModelMap modelMap) {
+	public Role create(@Valid @RequestBody RoleCreateRequest createRequest) {
 		Role role = new Role();
-		role.setRoleName(roleName);
-		roleService.save(role);
-		modelMap.addAttribute("roles", roleService.findAll());
-		return "/roles/roles";
-
-	}
-
-	@GetMapping("/create")
-	public String createUser2(@RequestParam("roleName") String roleName, ModelMap modelMap) {
-		Role role = new Role();
-		role.setRoleName(roleName);
-		roleService.save(role);
-		modelMap.addAttribute("roles", roleService.findAll());
-		return "/roles/roles";
-
+		role.setRoleName(createRequest.getRoleName());
+		return roleService.save(role);
 	}
 
 }
