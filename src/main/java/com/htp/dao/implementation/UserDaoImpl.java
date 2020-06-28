@@ -2,6 +2,7 @@ package com.htp.dao.implementation;
 
 import com.htp.dao.UserDao;
 import com.htp.domain.User;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -61,10 +62,14 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	public Optional<User> findByLogin(String login) {
-		final String searchQuery = "select * from m_users where login = :login";
-		MapSqlParameterSource params = new MapSqlParameterSource();
-		params.addValue(USER_LOGIN, login);
-		return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(searchQuery, params, this::rowMapper));
+		try {
+			final String searchQuery = "select * from m_users where login = :login";
+			MapSqlParameterSource params = new MapSqlParameterSource();
+			params.addValue(USER_LOGIN, login);
+			return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(searchQuery, params, this::rowMapper));
+		} catch (EmptyResultDataAccessException e) {
+			return Optional.empty();
+		}
 	}
 
 	@Override
