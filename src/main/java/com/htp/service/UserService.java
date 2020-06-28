@@ -1,5 +1,6 @@
 package com.htp.service;
 
+import com.htp.domain.Role;
 import com.htp.domain.User;
 
 import java.util.List;
@@ -19,4 +20,7 @@ public interface UserService {
 	User update(User user);
 
 	int delete(User user);
+
+	List<Role> getUserRoles(Long userId);
+
 }

@@ -1,6 +1,8 @@
 package com.htp.service;
 
+import com.htp.dao.RoleDao;
 import com.htp.dao.UserDao;
+import com.htp.domain.Role;
 import com.htp.domain.User;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -12,10 +14,12 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
 	private final UserDao userDao;
+	private final RoleDao roleDao;
 
 	//@Qualifier("userRepositoryJdbcTemplate" нужен, чтобы заавтовайрилось.
-	public UserServiceImpl(@Qualifier("userRepositoryJdbcTemplate") UserDao userDao) {
+	public UserServiceImpl(@Qualifier("userRepositoryJdbcTemplate") UserDao userDao, RoleDao roleDao) {
 		this.userDao = userDao;
+		this.roleDao = roleDao;
 	}
 
 	@Override
@@ -54,6 +58,11 @@ public class UserServiceImpl implements UserService {
 
 	public Optional<User> findById(long itemId) {
 		return userDao.findById(itemId);
+	}
+
+	@Override
+	public List<Role> getUserRoles(Long userId) {
+		return roleDao.findRolesByUser(userId);
 	}
 
 	public int insertBatch(List<User> items) {

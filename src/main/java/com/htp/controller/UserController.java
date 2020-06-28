@@ -1,6 +1,8 @@
 package com.htp.controller;
 
 import com.htp.controller.request.UserCreateRequest;
+import com.htp.controller.request.UserUpdateRequest;
+import com.htp.domain.Role;
 import com.htp.domain.User;
 import com.htp.service.UserService;
 import io.swagger.annotations.*;
@@ -78,19 +80,34 @@ public class UserController {
 		return userService.save(user);
 	}
 
-	@ApiOperation(value = "Create user")
+	@ApiOperation(value = "Update user")
 	@ApiResponses({
-			@ApiResponse(code = 201, message = "Successful creation user"),
-			@ApiResponse(code = 422, message = "Failed user creation properties validation"),
+			@ApiResponse(code = 201, message = "Successful updating user"),
+			@ApiResponse(code = 422, message = "Failed user updating properties validation"),
 			@ApiResponse(code = 500, message = "Server error, something wrong")
 	})
 	@PostMapping("/update")
-	public User update(@Valid @RequestBody UserCreateRequest createRequest) {
+	public User update(@Valid @RequestBody UserUpdateRequest updateRequest) {
 		User user = new User();
-		user.setLogin(createRequest.getLogin());
-		user.setName(createRequest.getName());
-		user.setBirthDate(createRequest.getBirthDate());
-		user.setPassword(createRequest.getPassword());
+		user.setId(updateRequest.getId());
+		user.setLogin(updateRequest.getLogin());
+		user.setName(updateRequest.getName());
+		user.setBirthDate(updateRequest.getBirthDate());
+		user.setPassword(updateRequest.getPassword());
 		return userService.update(user);
 	}
+
+	@ApiOperation(value = "Find user roles") //Наименование в документации
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Ok. All users roles found"),              //Сообщение об успешном поиске
+			@ApiResponse(code = 500, message = "Something's wrong. User roles ran away") //Сообщение, что всё плохо
+	})
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "userId", value = "Search user roles", example = "1", required = true, dataType = "long", paramType = "query")
+	})
+	@GetMapping("/roles")
+	public ResponseEntity<List<Role>> findUserRoles(@RequestParam("userId") Long userId, ModelMap modelMap) {
+		return new ResponseEntity<>(userService.getUserRoles(userId) , HttpStatus.OK);
+	}
+
 }
