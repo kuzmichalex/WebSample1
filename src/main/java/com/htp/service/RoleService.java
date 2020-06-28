@@ -12,6 +12,8 @@ public interface RoleService {
 
 	Optional<Role> findByRoleName(String name);
 
+	List<Role>findRolesByUser(long userId);
+
 	Role findOne(Long RoleId);
 
 	Role save(Role Role);

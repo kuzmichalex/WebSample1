@@ -1,6 +1,7 @@
 package com.htp.dao.implementation;
 
 import com.htp.dao.UserDao;
+import com.htp.domain.Role;
 import com.htp.domain.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

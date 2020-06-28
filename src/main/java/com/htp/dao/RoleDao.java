@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface RoleDao extends GenericDao <Role, Long>{
 
 	Optional<Role> findByRoleName(String name);
+
+	List<Role> findRolesByUser(long userId);
 }

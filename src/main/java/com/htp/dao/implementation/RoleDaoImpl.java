@@ -10,7 +10,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class RoleDaoImpl implements RoleDao {
 	//Наименования колонок в таблице m_roles
 	public static final String ROLE_ID = "id";
 	public static final String ROLE_NAME = "role_name";
-	
+
 	private final JdbcTemplate jdbcTemplate;
 	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -35,7 +36,7 @@ public class RoleDaoImpl implements RoleDao {
 		user.setId(resultSet.getLong(ROLE_ID));
 		user.setRoleName(resultSet.getString(ROLE_NAME));
 		return user;
-	}	
+	}
 
 	@Override
 	public List<Role> findAll() {
@@ -66,9 +67,19 @@ public class RoleDaoImpl implements RoleDao {
 		params.addValue(ROLE_NAME, roleName);
 		try {
 			return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(searchByIDQuery, params, this::rowMapper));
-		}catch(EmptyResultDataAccessException e){
+		} catch (EmptyResultDataAccessException e) {
 			return Optional.empty();
 		}
+	}
+
+	@Override
+	public List<Role> findRolesByUser(long userId) {
+		final String searchRolesByUser = "select * from m_roles role where role.id in " +
+				"(select role_id from l_user_roles where user_id = :user_id )";
+
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("user_id", userId);
+		return namedParameterJdbcTemplate.query(searchRolesByUser, params, this::rowMapper);
 	}
 
 	@Override

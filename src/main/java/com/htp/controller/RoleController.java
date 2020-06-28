@@ -1,9 +1,7 @@
 package com.htp.controller;
 
 import com.htp.controller.request.RoleCreateRequest;
-import com.htp.controller.request.UserCreateRequest;
 import com.htp.domain.Role;
-import com.htp.domain.User;
 import com.htp.service.RoleService;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
@@ -56,10 +54,23 @@ public class RoleController {
 			@ApiImplicitParam(name = "name", value = "Search query role name", example = "ROLE_ADMINISTRATOR", required = true, dataType = "string", paramType = "query")
 	})
 	@GetMapping("/search")
-	public Role searchUser(@RequestParam("login") String login, ModelMap modelMap) {
+	public Role searchRole(@RequestParam("login") String login, ModelMap modelMap) {
 		//modelMap.addAttribute("users", userService.search(login));]
 		final Optional<Role> byRoleName = roleService.findByRoleName(login);
 		return byRoleName.orElse(null);
+	}
+
+	@ApiOperation(value = "Search role by user ID")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Successful loading user"),
+			@ApiResponse(code = 500, message = "Server error, something wrong")
+	})
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "userId", value = "Search query role user roles", example = "1", required = true, dataType = "long", paramType = "query")
+	})
+	@GetMapping("/user_roles")
+	public List<Role> searchRolesByUserId(@RequestParam("userId") long userId, ModelMap modelMap) {
+		return roleService.findRolesByUser(userId);
 	}
 
 	@ApiOperation(value = "Create role")
