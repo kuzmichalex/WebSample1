@@ -10,6 +10,13 @@ import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+
+//@SpringBootApplication определяет автоматическое сканирование пакета, где находится класс
+//  Чтобы сканировались другие пакеты, указываем scanBasePackages
+//@EnableSwagger2 - разрешаем /swagger-ui.html
+//@EnableTransactionManagement разрешаем использовать @Transactional ???
+//@EnableAspectJAutoProxy ??? И без него работает
+
 @EnableSwagger2
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableTransactionManagement(proxyTargetClass = true)
