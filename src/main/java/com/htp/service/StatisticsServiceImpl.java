@@ -8,7 +8,7 @@ import java.util.Map;
 @Service
 public class StatisticsServiceImpl implements StatisticsService{
 
-	private static DaoInvokeCountAspect invokeCountAspect;
+	private final DaoInvokeCountAspect invokeCountAspect;
 
 	public StatisticsServiceImpl(@Qualifier("daoInvokeStatisticsAspect") DaoInvokeCountAspect daoInvokeCountAspect) {
 		invokeCountAspect = daoInvokeCountAspect;

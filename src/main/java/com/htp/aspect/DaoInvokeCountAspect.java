@@ -13,10 +13,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component("daoInvokeStatisticsAspect")
 @Aspect
 public class DaoInvokeCountAspect {
-	private static final ConcurrentHashMap<String, Integer> methodInvocationsCounter = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<String, Integer> methodInvocationsCounter = new ConcurrentHashMap<>();
 
-	public static Map<String, Integer> getMethodInvocationsCounter() {
-		return new HashMap<>(methodInvocationsCounter);
+	public Map<String, Integer> getMethodInvocationsCounter() {
+		return new HashMap<>(this.methodInvocationsCounter);
 	}
 
 	//Указываем, куда будет внедряться логика. В данном случае в DAO-методы
