@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Component
+@Component("daoInvokeStatisticsAspect")
 @Aspect
 public class DaoInvokeCountAspect {
 	private static final ConcurrentHashMap<String, Integer> methodInvocationsCounter = new ConcurrentHashMap<>();
