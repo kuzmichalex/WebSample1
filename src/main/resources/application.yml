@@ -6,3 +6,7 @@ spring:
     password: root
     hikari:
       maximum-pool-size: 10
+---
+jwttoken:
+  secret: secret
+  expire: 10000000
