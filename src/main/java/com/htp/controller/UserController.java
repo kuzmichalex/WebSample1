@@ -4,17 +4,21 @@ import com.htp.controller.request.UserCreateRequest;
 import com.htp.controller.request.UserUpdateRequest;
 import com.htp.domain.Role;
 import com.htp.domain.User;
+import com.htp.security.util.PrincipalUtil;
 import com.htp.service.UserService;
 import io.swagger.annotations.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -29,6 +33,7 @@ public class UserController {
 			@ApiResponse(code = 200, message = "Ok. All users found"),              //Сообщение об успешном поиске
 			@ApiResponse(code = 500, message = "Something's wrong. Users ran away") //Сообщение, что всё плохо
 	})
+	@ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
 	@GetMapping
 	public ResponseEntity<List<User>> findAll(ModelMap modelMap) {
 //		modelMap.addAttribute("users", userService.findAll());
@@ -44,6 +49,7 @@ public class UserController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "id", value = "User database id", example = "1", required = true, dataType = "long", paramType = "path")
 	})
+	@ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
 	@GetMapping("/{id}")
 	public User findById(@PathVariable("id") Long userId, ModelMap modelMap) {
 		return userService.findOne(userId);
@@ -57,6 +63,7 @@ public class UserController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "login", value = "Search query user login", example = "admin", required = true, dataType = "string", paramType = "query")
 	})
+	@ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
 	@GetMapping("/search")
 	public User searchUser(@RequestParam("login") String login, ModelMap modelMap) {
 		//modelMap.addAttribute("users", userService.search(login));]
@@ -70,8 +77,11 @@ public class UserController {
 			@ApiResponse(code = 422, message = "Failed user creation properties validation"),
 			@ApiResponse(code = 500, message = "Server error, something wrong")
 	})
+	@ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
 	@PostMapping
-	public User create(@Valid @RequestBody UserCreateRequest createRequest) {
+	public User create(@Valid @RequestBody UserCreateRequest createRequest, Principal principal) {
+
+		log.info("User " + PrincipalUtil.getUserName(principal) + " create " + createRequest.getLogin());
 		User user = new User();
 		user.setLogin(createRequest.getLogin());
 		user.setName(createRequest.getName());
@@ -86,6 +96,7 @@ public class UserController {
 			@ApiResponse(code = 422, message = "Failed user updating properties validation"),
 			@ApiResponse(code = 500, message = "Server error, something wrong")
 	})
+	@ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
 	@PostMapping("/update")
 	public User update(@Valid @RequestBody UserUpdateRequest updateRequest) {
 		User user = new User();
@@ -105,9 +116,10 @@ public class UserController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "userId", value = "Search user roles", example = "1", required = true, dataType = "long", paramType = "query")
 	})
+	@ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
 	@GetMapping("/roles")
 	public ResponseEntity<List<Role>> findUserRoles(@RequestParam("userId") Long userId, ModelMap modelMap) {
-		return new ResponseEntity<>(userService.getUserRoles(userId) , HttpStatus.OK);
+		return new ResponseEntity<>(userService.getUserRoles(userId), HttpStatus.OK);
 	}
 
 }

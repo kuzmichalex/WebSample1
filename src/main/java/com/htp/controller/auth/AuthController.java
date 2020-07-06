@@ -3,7 +3,10 @@ package com.htp.controller.auth;
 
 import com.htp.controller.request.AuthRequest;
 import com.htp.controller.request.AuthResponse;
+import com.htp.controller.request.UserCreateRequest;
+import com.htp.domain.User;
 import com.htp.security.util.TokenUtils;
+import com.htp.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -32,11 +35,15 @@ public class AuthController {
 	/* Наша имплементация UserDetailService */
 	private UserDetailsService userDetailsService;
 
+	private UserService userService;
+
 	public AuthController(TokenUtils tokenUtils, AuthenticationManager authenticationManager,
-	                      @Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService) {
+	                      @Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService,
+	                      UserService userService) {
 		this.tokenUtils = tokenUtils;
 		this.authenticationManager = authenticationManager;
 		this.userDetailsService = userDetailsService;
+		this.userService = userService;
 	}
 
 	/* Аннотации @Valid и @RequestBody означают, что
@@ -69,4 +76,21 @@ public class AuthController {
 				, HttpStatus.OK);
 	}
 
+
+	@ApiOperation(value = "registration")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Successful login"),
+			@ApiResponse(code = 500, message = "Server error, something wrong")
+	})
+	//@ApiImplicitParams не нужен; параметры передаются в body
+	@PostMapping("/registration")
+	public User register(@Valid @RequestBody UserCreateRequest createRequest) {
+
+		User user = new User();
+		user.setLogin(createRequest.getLogin());
+		user.setName(createRequest.getName());
+		user.setBirthDate(createRequest.getBirthDate());
+		user.setPassword(createRequest.getPassword());
+		return userService.save(user);
+	}
 }

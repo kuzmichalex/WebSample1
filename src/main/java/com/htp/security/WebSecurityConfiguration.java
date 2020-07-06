@@ -3,6 +3,7 @@
 package com.htp.security;
 
 import com.htp.security.filter.AuthenticationTokenFilter;
+import com.htp.security.util.PasswordEncoderUtil;
 import com.htp.security.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /*
@@ -30,13 +32,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-	private UserDetailsService userDetailsService;
-	private TokenUtils tokenUtils;
+	private final UserDetailsService userDetailsService;
+	private final TokenUtils tokenUtils;
+//	private final PasswordEncoder passwordEncoder;
 
 	public WebSecurityConfiguration(@Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService,
-	                                TokenUtils tokenUtils) {
+	                                TokenUtils tokenUtils
+	                                ) {
 		this.userDetailsService = userDetailsService;
 		this.tokenUtils = tokenUtils;
+	//	this.passwordEncoder = passwordEncoder;
 	}
 
 	/* В контроллере аутентификации нам нужен AuthenticationManager. Получим его тут
@@ -64,7 +69,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	/* здесь мы указываем использвать для аутентификации наш сервис, который будет вытягивать информацию по пользователю из БД*/
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(NoOpPasswordEncoder.getInstance());
+		auth.userDetailsService(userDetailsService).passwordEncoder(PasswordEncoderUtil.getInstance());
 	}
 
 	/* здесь настраиваем правила для Access authorisation filter*/

@@ -2,6 +2,7 @@
 package com.htp.controller;
 
 import com.htp.controller.response.ErrorMessage;
+import io.jsonwebtoken.MalformedJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,13 @@ public class DefaultExceptionHandler {
 	@ExceptionHandler(AuthenticationException.class)
 	public ResponseEntity<ErrorMessage> handleAuthenticationException(AuthenticationException e){
 		log.error(e.getMessage(), e);
-		return new ResponseEntity<>(new ErrorMessage(1L, e.getLocalizedMessage()), HttpStatus.UNAUTHORIZED);
+		return new ResponseEntity<>(new ErrorMessage(2L, e.getLocalizedMessage()), HttpStatus.UNAUTHORIZED);
+	}
+
+	@ExceptionHandler(MalformedJwtException.class)
+	public ResponseEntity<ErrorMessage> handleMalformedJwtException(MalformedJwtException e){
+		log.error(e.getMessage(), e);
+		return new ResponseEntity<>(new ErrorMessage(3L, e.getLocalizedMessage()), HttpStatus.UNAUTHORIZED);
 	}
 
 	@ExceptionHandler(Exception.class)
