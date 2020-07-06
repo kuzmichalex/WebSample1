@@ -103,4 +103,8 @@ public class TokenUtils {
 				.collect(Collectors.toList());
 	}
 
+	public Boolean validateToken(String token, UserDetails userDetails){
+		final String userName = getUserNameFromToken(token);
+		return userName.equals(userDetails.getUsername());
+	}
 }

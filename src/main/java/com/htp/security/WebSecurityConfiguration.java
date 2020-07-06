@@ -2,6 +2,8 @@
 
 package com.htp.security;
 
+import com.htp.security.filter.AuthenticationTokenFilter;
+import com.htp.security.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +15,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /*
  * Аннтотация EnableWebSecurity указывает, что этот класс будет использоваться для построения фильтров
@@ -27,9 +31,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private UserDetailsService userDetailsService;
+	private TokenUtils tokenUtils;
 
-	public WebSecurityConfiguration(@Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService) {
+	public WebSecurityConfiguration(@Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService,
+	                                TokenUtils tokenUtils) {
 		this.userDetailsService = userDetailsService;
+		this.tokenUtils = tokenUtils;
 	}
 
 	/* В контроллере аутентификации нам нужен AuthenticationManager. Получим его тут
@@ -43,10 +50,21 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
+
+	/* Этот бин нужен потому, что напрямую в фильтр заавтовайрить нельзя
+	* Поэтому здесь мы создаём AuthenticationTokenFilter */
+	@Bean
+	public AuthenticationTokenFilter authenticationTokenFilterBean(AuthenticationManager authenticationManager){
+		final AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter(tokenUtils, userDetailsService);
+		authenticationTokenFilter.setAuthenticationManager(authenticationManager);
+		return authenticationTokenFilter;
+	}
+
+
 	/* здесь мы указываем использвать для аутентификации наш сервис, который будет вытягивать информацию по пользователю из БД*/
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService);
+		auth.userDetailsService(userDetailsService).passwordEncoder(NoOpPasswordEncoder.getInstance());
 	}
 
 	/* здесь настраиваем правила для Access authorisation filter*/
@@ -59,21 +77,36 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				exceptionHandling().            //Включаем наш exception handler
 				and().
 				//sessionManagement() - информация о сессии. На не надо, тк информация о залогинивании мы храним в токене
-						authorizeRequests().            //Указываем необходимость авторизировать все запросы
+				authorizeRequests().            //Указываем необходимость авторизировать все запросы
 				antMatchers("/admin/**").hasAnyRole("ROLE_ADMIN").
-				antMatchers("actuator/**").permitAll().
-//				antMatchers("swagger-ui.html#").permitAll().
-//				antMatchers("/v2/api-docs", "configuration/ui", "swagger-resources/", "configuration/security/", "/webjars/").permitAll().
-				antMatchers("/users").permitAll().
+				antMatchers("/actuator/**").permitAll().
+				antMatchers("/auth/**").permitAll().
+				antMatchers("/registration/**").permitAll().
+				antMatchers("/logout/**").permitAll().
+				antMatchers("/csrf/**").permitAll().
+				antMatchers("swagger-ui.html#").permitAll().
+				antMatchers("/v2/api-docs", "configuration/ui", "swagger-resources/", "configuration/security/", "/webjars/").permitAll().
+				antMatchers("/users/**").permitAll().
 				antMatchers(HttpMethod.OPTIONS, "/**").permitAll().      //разрешаем доступ ко всем options-запросам
 				anyRequest().authenticated();
 
+		//Добавляем бин в проверку перед всем
+		http.addFilterBefore(authenticationTokenFilterBean(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
 	}
 
 	/* здесь мы указываем, какие урл не проверять вовсе*/
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().
-				antMatchers("swagger-ui.html#", "/v2/api-docs", "configuration/ui", "swagger-resources/", "configuration/security/", "/webjars/");
+				antMatchers(
+						"/v2/api-docs/**",
+						"/configuration/ui/**",
+						"/swagger-resources/**",
+						"/configuration/security/**",
+						"/swagger-ui.html",
+						"/actuator",
+						"/csrf/**",
+						"/webjars/**"
+				);
 	}
 }

@@ -15,10 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -50,7 +47,7 @@ public class AuthController {
 			@ApiResponse(code = 500, message = "Server error, something wrong")
 	})
 	//@ApiImplicitParams не нужен; параметры передаются в body
-	@GetMapping
+	@PostMapping
 	public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest authRequest) {
 		/*Валидация переданных параметров будет произведена самим спрингом*/
 
