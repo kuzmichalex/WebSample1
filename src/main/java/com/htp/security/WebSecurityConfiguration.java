@@ -1,4 +1,5 @@
 //security
+//JD18 Hibernate запермитили /hibernate/users/ чтобы не мешало тестировать
 
 package com.htp.security;
 
@@ -16,8 +17,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /*
@@ -92,6 +91,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				antMatchers("swagger-ui.html#").permitAll().
 				antMatchers("/v2/api-docs", "configuration/ui", "swagger-resources/", "configuration/security/", "/webjars/").permitAll().
 				antMatchers("/users/**").permitAll().
+				antMatchers("/hibernate/users/**").permitAll().
 				antMatchers(HttpMethod.OPTIONS, "/**").permitAll().      //разрешаем доступ ко всем options-запросам
 				anyRequest().authenticated();
 
