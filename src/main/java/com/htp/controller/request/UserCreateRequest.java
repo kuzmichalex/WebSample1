@@ -40,7 +40,7 @@ public class UserCreateRequest {
 
 	@NotNull
 	//@NotEmpty --Ругается, ячо для типа Date NotEmpty валидатора нет.
-	@ApiModelProperty(required = true, dataType = "date", notes = "user birth date")
+	@ApiModelProperty(required = true, dataType = "Date", notes = "user birth date")
 	private Date birthDate;
 
 	@NotNull

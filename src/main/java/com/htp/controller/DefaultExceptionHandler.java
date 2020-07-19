@@ -47,7 +47,7 @@ public class DefaultExceptionHandler {
 	@ExceptionHandler(TypeMismatchException.class)
 	public ResponseEntity<ErrorMessage> handleTypeMismatchException(TypeMismatchException e) {
 		log.error(e.getMessage(), e);
-		return new ResponseEntity<>(new ErrorMessage(1003L, "Oh, no! Type mismatch!"), HttpStatus.PAYMENT_REQUIRED);
+		return new ResponseEntity<>(new ErrorMessage(1003L, "Oh, no! Path variable Type mismatch!"), HttpStatus.BAD_REQUEST);
 	}
 
 	/* Нейдачная аутентификация*/
@@ -61,7 +61,7 @@ public class DefaultExceptionHandler {
 	@ExceptionHandler(InvalidUserRegistrationDataException.class)
 	public ResponseEntity<ErrorMessage> handleTInvalidUserRegistrationDataException(InvalidUserRegistrationDataException e) {
 		log.error(e.getMessage(), e);
-		return new ResponseEntity<>(new ErrorMessage(2001L, "Oh, no! Type mismatch!"), HttpStatus.PAYMENT_REQUIRED);
+		return new ResponseEntity<>(new ErrorMessage(2001L, "I can't register this dude because: " + e.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
 	}
 
 	/*Что-то не так с JWT*/

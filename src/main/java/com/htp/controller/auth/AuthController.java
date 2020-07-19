@@ -71,8 +71,6 @@ public class AuthController {
 
 		/*Всё хорошо и поэтому мы сохраняем информации о залогинивании в секьюрити контексте*/
 		SecurityContextHolder.getContext().setAuthentication(authenticate);
-		System.err.println("--------------------- AUTHENTICATION -------------------");
-		System.err.println(SecurityContextHolder.getContext().getAuthentication());
 
 		return new ResponseEntity<>(
 				AuthResponse.builder()

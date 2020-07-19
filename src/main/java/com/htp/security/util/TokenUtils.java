@@ -2,14 +2,14 @@
 package com.htp.security.util;
 
 import com.htp.configuration.JwtTokenConfiguration;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.security.SignatureException;
 import java.util.*;
 import java.util.stream.Collectors;
 
