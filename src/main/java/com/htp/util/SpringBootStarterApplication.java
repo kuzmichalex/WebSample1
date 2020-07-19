@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 
 
 //@SpringBootApplication определяет автоматическое сканирование пакета, где находится класс
@@ -44,32 +45,29 @@ import javax.sql.DataSource;
 		SwaggerConfig.class
 })
 public class SpringBootStarterApplication {
+	private static final String SCAN_PACHAGES = "com.htp";
+
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootStarterApplication.class, args);
 	}
 
 	@Bean(name = "sessionFactory")
-	public SessionFactory getSessionFactory(DataSource dataSource) throws Exception {
-		// Fix Postgres JPA Error:
-		// Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
-		// properties.put("hibernate.temp.use_jdbc_metadata_defaults",false);
+	public SessionFactory getSessionFactory(DataSource dataSource) throws IOException {
+	/*	 Fix Postgres JPA Error:
+		 Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
+		 "properties.put("hibernate.temp.use_jdbc_metadata_defaults",false);" */
 
 		LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
 
 		// Package contain entity classes
-		factoryBean.setPackagesToScan("com.htp");
+		factoryBean.setPackagesToScan(SCAN_PACHAGES);
 		factoryBean.setDataSource(dataSource);
-		factoryBean.setAnnotatedPackages("com.htp");
+		factoryBean.setAnnotatedPackages(SCAN_PACHAGES);
 		factoryBean.afterPropertiesSet();
-		//
-		SessionFactory sf = factoryBean.getObject();
-		System.out.println("## getSessionFactory: " + sf);
-//		sf.
-		return sf;
+		return factoryBean.getObject();
 	}
 
 	//Entity Manager
-
 	@Autowired
 	@Primary
 	@Bean(name = "entityManagerFactory")
@@ -77,7 +75,7 @@ public class SpringBootStarterApplication {
 		LocalContainerEntityManagerFactoryBean em
 				= new LocalContainerEntityManagerFactoryBean();
 		em.setDataSource(dataSource);
-		em.setPackagesToScan("com.htp");
+		em.setPackagesToScan(SCAN_PACHAGES);
 
 		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		em.setJpaVendorAdapter(vendorAdapter);

@@ -3,7 +3,6 @@ package com.htp.controller;
 import com.htp.service.StatisticsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +20,7 @@ public class StatisticsController {
 
 
 	@GetMapping
-	public ResponseEntity<Map<String, Integer>> statistics(ModelMap modelMap) {
-		return new ResponseEntity<Map<String, Integer>>(statisticsService.getStatistics(), HttpStatus.OK);
+	public ResponseEntity<Map<String, Integer>> statistics() {
+		return new ResponseEntity<>(statisticsService.getStatistics(), HttpStatus.OK);
 	}
 }

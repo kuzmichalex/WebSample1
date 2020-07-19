@@ -4,11 +4,8 @@ package com.htp.security.filter;
 import com.htp.security.ApplicationHeaders;
 import com.htp.security.util.TokenUtils;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,7 +38,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		final HttpServletRequest httpReq = (HttpServletRequest) req;
 		final String authToken = httpReq.getHeader(ApplicationHeaders.AUTH_TOKEN);
-		String userNameFromToken = null;
+		String userNameFromToken;
 
 		//Всё проверки идут если в принципе есть токен. А то даже до сваггера добраться нельзя
 		//Проверяем, есть ли у нас токен и не повреждён ли он, и проверем, что в контексте его нет
@@ -51,7 +48,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 			try {
 				userNameFromToken = tokenUtils.getUserNameFromToken(authToken);
 			} catch (JwtException e) {
-				doErrorJsonRequest(res, "invalid JWT token:" + e.getMessage());
+				doErrorJsonRequest(res, "Hacker attack detected! invalid JWT token:" + e.getMessage());
 				return;
 			}
 
@@ -68,7 +65,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 					}
 				}
 			} catch (Exception e) {
-				doErrorJsonRequest(res, "invalid JWT auth: " + e.getMessage());
+				doErrorJsonRequest(res, "Hacker attack detected! Invalid JWT auth: " + e.getMessage());
 				return;
 			}
 		}

@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -80,12 +79,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				exceptionHandling().            //Включаем наш exception handler
 				and().
 				//sessionManagement() - информация о сессии. На не надо, тк информация о залогинивании мы храним в токене
-				authorizeRequests().            //Указываем необходимость авторизировать все запросы
+						authorizeRequests().            //Указываем необходимость авторизировать все запросы
 				antMatchers("/admin/**").hasAnyRole("ADMIN").
 				antMatchers("/users/**").hasAnyRole("ADMIN", "USER").
 
-				antMatchers("/actuator/**").permitAll().
 				antMatchers("/auth/**").permitAll().
+				antMatchers("/statistics/**").permitAll().
+				antMatchers("/actuator/**").permitAll().
 				antMatchers("/registration/**").permitAll().
 				antMatchers("/logout/**").permitAll().
 				antMatchers("/csrf/**").permitAll().
@@ -98,14 +98,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		//Добавляем бин в проверку перед всем
 		http.addFilterBefore(authenticationTokenFilterBean(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
 
-		System.err.println("--------------------- AUTHENTICATION -------------------");
-		System.err.println(SecurityContextHolder.getContext().getAuthentication());
 
 	}
 
 	/* здесь мы указываем, какие урл не проверять вовсе*/
 	@Override
-	public void configure(WebSecurity web) throws Exception {
+	public void configure(WebSecurity web) {
 		web.ignoring().
 				antMatchers(
 						"/v2/api-docs/**",

@@ -7,7 +7,6 @@ import com.htp.service.RoleService;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -42,7 +41,7 @@ public class RoleController {
 			@ApiImplicitParam(name = "id", value = "Role database id", example = "1", required = true, dataType = "long", paramType = "path")
 	})
 	@GetMapping("/{id}")
-	public Role findById(@PathVariable("id") Long userId, ModelMap modelMap) {
+	public Role findById(@PathVariable("id") Long userId) {
 		return roleService.findOne(userId);
 	}
 
@@ -56,7 +55,7 @@ public class RoleController {
 			@ApiImplicitParam(name = "name", value = "Search query role name", example = "ROLE_ADMINISTRATOR", required = true, dataType = "string", paramType = "query")
 	})
 	@GetMapping("/search")
-	public Role searchRole(@RequestParam("login") String login, ModelMap modelMap) {
+	public Role searchRole(@RequestParam("login") String login) {
 		//modelMap.addAttribute("users", userService.search(login));]
 		final Optional<Role> byRoleName = roleService.findByRoleName(login);
 		return byRoleName.orElse(null);
@@ -71,7 +70,7 @@ public class RoleController {
 			@ApiImplicitParam(name = "userId", value = "Search query role user roles", example = "1", required = true, dataType = "long", paramType = "query")
 	})
 	@GetMapping("/user_roles")
-	public List<Role> searchRolesByUserId(@RequestParam("userId") long userId, ModelMap modelMap) {
+	public List<Role> searchRolesByUserId(@RequestParam("userId") long userId) {
 		return roleService.findRolesByUser(userId);
 	}
 
