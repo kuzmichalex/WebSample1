@@ -6,12 +6,11 @@ import com.htp.dao.RoleDao;
 import com.htp.dao.UserDao;
 import com.htp.domain.Role;
 import com.htp.domain.User;
-import com.htp.exceptions.UserNameNotFoundException;
+import com.htp.exceptions.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,16 +35,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String userLogin) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String userLogin)  {
 
 		final Optional<User> byLogin = userRepository.findByLogin(userLogin);
-		if (byLogin.isEmpty()) throw new UserNameNotFoundException("User witch login " + userLogin + " not found");
+		if (byLogin.isEmpty()) throw new EntityNotFoundException("User witch login " + userLogin + " not found");
 
 		final User user = byLogin.get();
 		final List<Role> rolesByUser = roleRepository.findRolesByUser(user.getId());
 		final String authorities = rolesByUser.stream().map(Role::getRoleName).collect(Collectors.joining(","));
 		return new org.springframework.security.core.userdetails.User(
-			user.getLogin(),
+				user.getLogin(),
 				user.getPassword(),
 				AuthorityUtils.commaSeparatedStringToAuthorityList(authorities)
 		);

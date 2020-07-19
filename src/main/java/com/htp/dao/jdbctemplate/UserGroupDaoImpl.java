@@ -1,7 +1,7 @@
-package com.htp.dao.implementation;
+package com.htp.dao.jdbctemplate;
 
-import com.htp.dao.TrainingFeaturesDao;
-import com.htp.domain.TrainingFeatures;
+import com.htp.dao.UserGroupDao;
+import com.htp.domain.UserGroup;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -15,64 +15,71 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Repository("trainingFeaturesRepositoryJdbcTemplate")
-public class TrainingFeaturesDaoImpl implements TrainingFeaturesDao {
-	public static final String ID = "id";
-	public static final String TRAINING_ID = "training_id";
-	public static final String FEATURE_ID = "feature_id";
-	public static final String IS_DELETED = "is_deleted";
+@Repository("userGroupRepositoryJdbcTemplate")
+public class UserGroupDaoImpl implements UserGroupDao {
+	private static final String ID = "id";
+	private static final String USER_ID = "user_id";
+	private static final String GROUP_ID = "group_id";
+	private static final String DATE_IN = "date_in";
+	private static final String DATE_OUT = "date_out";
+	private static final String IS_DELETED = "is_deleted";
 
 	private final JdbcTemplate jdbcTemplate;
 	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	public TrainingFeaturesDaoImpl(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	public UserGroupDaoImpl(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
-
-	private TrainingFeatures rowMapper(ResultSet resultSet, int i) throws SQLException {
-		TrainingFeatures item = new TrainingFeatures();
+	private UserGroup rowMapper(ResultSet resultSet, int i) throws SQLException {
+		UserGroup item = new UserGroup();
 		item.setId(resultSet.getLong(ID));
-		item.setId(resultSet.getLong(TRAINING_ID));
-		item.setFeatureId(resultSet.getLong(FEATURE_ID));
+		item.setUserId(resultSet.getLong(USER_ID));
+		item.setGroupId(resultSet.getLong(GROUP_ID));
+		item.setDateIn(resultSet.getDate(DATE_IN));
+		item.setDateOut(resultSet.getDate(DATE_OUT));
 		item.setDeleted(resultSet.getBoolean(IS_DELETED));
 		return item;
 	}
-
-
 	@Override
-	public List<TrainingFeatures> findAll() {
-		final String findAllQuery = "select * from l_training_features order by id desc";
+	public List<UserGroup> findAll() {
+		final String findAllQuery = "select * from l_user_groups order by id desc";
 		return jdbcTemplate.query(findAllQuery, this::rowMapper);
 	}
 
 	@Override
-	public Optional<TrainingFeatures> findById(long itemId) {
+	public Optional<UserGroup> findById(long itemId) {
 		return Optional.ofNullable(findOne(itemId));
 	}
 
 	@Override
-	public TrainingFeatures findOne(Long itemId) {
-		final String searchByIDQuery = "select * from l_training_features where id = :id";
+	public UserGroup findOne(Long itemId) {
+		final String searchByIDQuery = "select * from l_user_groups where id = :id";
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue(ID, itemId);
 		return namedParameterJdbcTemplate.queryForObject(searchByIDQuery, params, this::rowMapper);
 	}
 
 	@Override
-	public TrainingFeatures save(TrainingFeatures item) {
-		final String insertQuery = "insert into l_training_features (" +
-				"training_id," +
-				"feature_id," +
+	public UserGroup save(UserGroup item) {
+		final String insertQuery = "insert into l_user_groups (" +
+				"user_id," +
+				"group_id," +
+				"date_in," +
+				"date_out," +
 				"is_deleted ) values (" +
-				":training_id," +
-				":feature_id," +
+				":user_id," +
+				":group_id," +
+				":date_in," +
+				":date_out," +
 				":is_deleted)";
 
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		params.addValue(TRAINING_ID, item.getTrainingId());
-		params.addValue(FEATURE_ID, item.getFeatureId());
+		params.addValue(USER_ID, item.getUserId());
+		params.addValue(GROUP_ID, item.getGroupId());
+		params.addValue(DATE_IN, item.getDateIn());
+		params.addValue(DATE_OUT, item.getDateOut());
 		params.addValue(IS_DELETED, item.isDeleted());
 		namedParameterJdbcTemplate.update(insertQuery, params, keyHolder);
 		long createdItemId = (Long) Objects.requireNonNull(keyHolder.getKeys()).get(ID);
@@ -80,17 +87,19 @@ public class TrainingFeaturesDaoImpl implements TrainingFeaturesDao {
 	}
 
 	@Override
-	public TrainingFeatures update(TrainingFeatures item) {
-		final String updateQuery = "update l_training_features set " +
-				"training_id = :training_id," +
-				"feature_id = :feature_id," +
+	public UserGroup update(UserGroup item) {
+		final String updateQuery = "update l_user_groups set user_id = :user_id," +
+				"group_id = :group_id," +
+				"date_in = :date_in," +
+				"date_out = :date_out," +
 				"is_deleted = :is_deleted" +
 				" where id = :id";
 
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		params.addValue(TRAINING_ID, item.getTrainingId());
-		params.addValue(FEATURE_ID, item.getFeatureId());
+		params.addValue(GROUP_ID, item.getGroupId());
+		params.addValue(DATE_IN, item.getDateIn());
+		params.addValue(DATE_OUT, item.getDateOut());
 		params.addValue(IS_DELETED, item.isDeleted());
 		params.addValue(ID, item.getId());
 
@@ -100,7 +109,7 @@ public class TrainingFeaturesDaoImpl implements TrainingFeaturesDao {
 	}
 
 	@Override
-	public int delete(TrainingFeatures item) {
+	public int delete(UserGroup item) {
 		item.setDeleted(true);
 		update(item);
 		return 1;

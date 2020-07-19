@@ -1,7 +1,7 @@
-package com.htp.dao.implementation;
+package com.htp.dao.jdbctemplate;
 
-import com.htp.dao.FeatureDao;
-import com.htp.domain.Feature;
+import com.htp.dao.GroupDao;
+import com.htp.domain.Group;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -15,72 +15,79 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Repository("featureRepositoryJdbcTemplate")
-public class FeatureDaoImpl implements FeatureDao {
-	private static final String ID="id";
-	private static final String DESCRIPTION="description";
-	private static final String NAME="name";
-	private static final String IS_DELETED="is_deleted";
+
+@Repository("groupRepositoryJdbcTemplate")
+public class GroupDaoImpl implements GroupDao {
+	//Column names
+	private static final String ID = "id";
+	private static final String NAME = "name";
+	private static final String DESCRIPTION = "description";
+	private static final String USER_FOUNDER_ID = "user_founder_id";
+	private static final String DATE_FOUNDATION = "date_foundation";
+	private static final String IS_DELETED = "is_deleted";
 
 	private final JdbcTemplate jdbcTemplate;
 	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	public FeatureDaoImpl(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	public GroupDaoImpl(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
-	private Feature rowMapper(ResultSet resultSet, int i) throws SQLException {
-		Feature item = new Feature();
+
+	private Group rowMapper(ResultSet resultSet, int i) throws SQLException {
+		Group item = new Group();
 		item.setId(resultSet.getLong(ID));
-		item.setDescription(resultSet.getString(DESCRIPTION));
 		item.setName(resultSet.getString(NAME));
+		item.setDescription(resultSet.getString(DESCRIPTION));
+		item.setUserFounderId(resultSet.getLong(USER_FOUNDER_ID));
+		item.setDateFoundation(resultSet.getDate(DATE_FOUNDATION));
 		item.setDeleted(resultSet.getBoolean(IS_DELETED));
 		return item;
 	}
 
 	@Override
-	public List<Feature> findAll() {
-		final String findAllQuery = "select * from m_features order by id desc";
+	public List<Group> findAll() {
+		final String findAllQuery = "select * from m_groups order by id desc";
 		return jdbcTemplate.query(findAllQuery, this::rowMapper);
 	}
 
 	@Override
-	public Optional<Feature> findById(long itemId) {
+	public Optional<Group> findById(long itemId) {
 		return Optional.ofNullable(findOne(itemId));
 	}
 
 	@Override
-	public Feature findOne(Long itemId) {
-		final String searchByIDQuery = "select * from m_features where id = :id";
+	public Group findOne(Long itemId) {
+		final String searchByIDQuery = "select * from m_groups where id = :id";
+
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue(ID, itemId);
 		return namedParameterJdbcTemplate.queryForObject(searchByIDQuery, params, this::rowMapper);
 	}
 
 	@Override
-	public Feature save(Feature item) {
-		final String insertQuery = "insert into m_features (" +
-				"description," +
-				"name," +
-				"is_deleted ) values (" +
-				":description," +
-				":name," +
-				":is_deleted)";
+	public Group save(Group item) {
+		final String insertQuery = "insert into m_groups ( name, description, user_founder_id, date_foundation ) values (:name, :description, :user_founder_id, :date_foundation)";
 
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		params.addValue(DESCRIPTION, item.getDescription());
+
 		params.addValue(NAME, item.getName());
-		params.addValue(IS_DELETED, item.isDeleted());
+		params.addValue(DESCRIPTION, item.getDescription());
+		params.addValue(USER_FOUNDER_ID, item.getUserFounderId());
+		params.addValue(DATE_FOUNDATION, item.getDateFoundation());
+
 		namedParameterJdbcTemplate.update(insertQuery, params, keyHolder);
 		long createdItemId = (Long) Objects.requireNonNull(keyHolder.getKeys()).get(ID);
 		return findOne(createdItemId);
 	}
 
 	@Override
-	public Feature update(Feature item) {
-		final String updateQuery = "update m_features set name = :name," +
+	public Group update(Group item) {
+		final String updateQuery = "update m_groups set name = :name," +
 				"description = :description," +
+				"user_founder_id = :user_founder_id," +
+				"date_foundation = :date_foundation," +
 				"is_deleted = :is_deleted" +
 				" where id = :id";
 
@@ -88,6 +95,8 @@ public class FeatureDaoImpl implements FeatureDao {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		params.addValue(NAME, item.getName());
 		params.addValue(DESCRIPTION, item.getDescription());
+		params.addValue(USER_FOUNDER_ID, item.getUserFounderId());
+		params.addValue(DATE_FOUNDATION, item.getDateFoundation());
 		params.addValue(IS_DELETED, item.isDeleted());
 		params.addValue(ID, item.getId());
 
@@ -97,7 +106,7 @@ public class FeatureDaoImpl implements FeatureDao {
 	}
 
 	@Override
-	public int delete(Feature item) {
+	public int delete(Group item) {
 		item.setDeleted(true);
 		update(item);
 		return 1;

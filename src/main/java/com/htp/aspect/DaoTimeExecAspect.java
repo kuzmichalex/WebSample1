@@ -14,7 +14,7 @@ public class DaoTimeExecAspect {
 	private static final Logger log = Logger.getLogger(DaoTimeExecAspect.class);
 
 	//Указываем, куда будет внедряться логика. В данном случае в DAO-методы
-	@Pointcut("execution(* com.htp.dao.implementation.*.*(..))")
+	@Pointcut("execution(* com.htp.dao.jdbctemplate.*.*(..))")
 	public void aroundDaoImplPointcut() { /* Pointcut methods should have empty body! */ }
 
 	@Around("aroundDaoImplPointcut()")

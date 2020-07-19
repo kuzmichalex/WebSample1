@@ -2,14 +2,14 @@
 package com.htp.security.util;
 
 import com.htp.configuration.JwtTokenConfiguration;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.security.SignatureException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,12 +26,13 @@ public class TokenUtils {
 	//строка payload токена, содержащая список ролей ползователя
 	public static final String ROLES = "roles";
 	//строка payload, содержащая имя залогиненного пользователя
-	public static final String SUBJECT = "subject";
+	public static final String SUBJECT = "sub";
 
 	private final JwtTokenConfiguration jwtTokenConfig;
 
 	public String getUserNameFromToken(String token) {
-		return getClaimsFromToken(token).getSubject();
+		final Claims claimsFromToken = getClaimsFromToken(token);
+		return claimsFromToken.getSubject();
 	}
 
 	public Date getCreateDateFromToken(String token) {
@@ -49,6 +50,7 @@ public class TokenUtils {
 				.setSigningKey(jwtTokenConfig.getSecret())
 				.parseClaimsJws(token)
 				.getBody();
+
 	}
 
 	private Date generateCurrentDate() {
@@ -99,11 +101,11 @@ public class TokenUtils {
 		return authorities.stream()
 				.map(GrantedAuthority::getAuthority)
 				.map(a -> a.replace("ROLE_", ""))
-				.map(String::toLowerCase)
+				.map(String::toUpperCase)
 				.collect(Collectors.toList());
 	}
 
-	public Boolean validateToken(String token, UserDetails userDetails){
+	public Boolean validateToken(String token, UserDetails userDetails) {
 		final String userName = getUserNameFromToken(token);
 		return userName.equals(userDetails.getUsername());
 	}

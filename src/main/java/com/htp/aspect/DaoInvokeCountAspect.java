@@ -20,7 +20,7 @@ public class DaoInvokeCountAspect {
 	}
 
 	//Указываем, куда будет внедряться логика. В данном случае в DAO-методы
-	@Pointcut("execution(* com.htp.dao.implementation.*.*(..))")
+	@Pointcut("execution(* com.htp.dao.jdbctemplate.*.*(..))")
 	public void beforeDaoPointcut() { /* Pointcut methods should have empty body! */ }
 
 	@Before("beforeDaoPointcut()")

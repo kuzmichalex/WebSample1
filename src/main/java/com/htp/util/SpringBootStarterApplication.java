@@ -26,8 +26,9 @@ import javax.sql.DataSource;
 //@SpringBootApplication определяет автоматическое сканирование пакета, где находится класс
 //  Чтобы сканировались другие пакеты, указываем scanBasePackages
 //@EnableSwagger2 - разрешаем /swagger-ui.html
-//@EnableTransactionManagement разрешаем использовать @Transactional ???
+//@EnableTransactionManagement разрешаем использовать @Transactional Это включит проксирование, которое нужно для Transactional
 //@EnableAspectJAutoProxy ??? И без него работает
+
 
 @EnableSwagger2
 @EnableAspectJAutoProxy(proxyTargetClass = true)
@@ -63,6 +64,7 @@ public class SpringBootStarterApplication {
 		//
 		SessionFactory sf = factoryBean.getObject();
 		System.out.println("## getSessionFactory: " + sf);
+//		sf.
 		return sf;
 	}
 

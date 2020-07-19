@@ -18,7 +18,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
@@ -27,15 +30,15 @@ import javax.validation.Valid;
 public class AuthController {
 
 	/*Наш TokenUtils - создание, разбор токена и тд*/
-	private TokenUtils tokenUtils;
+	private final TokenUtils tokenUtils;
 
 	/* Аутентификацией будет заниматься AuthenticationManager - наш или дефолтовый */
-	private AuthenticationManager authenticationManager;
+	private final AuthenticationManager authenticationManager;
 
 	/* Наша имплементация UserDetailService */
-	private UserDetailsService userDetailsService;
+	private final UserDetailsService userDetailsService;
 
-	private UserService userService;
+	private final UserService userService;
 
 	public AuthController(TokenUtils tokenUtils, AuthenticationManager authenticationManager,
 	                      @Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService,
@@ -51,7 +54,8 @@ public class AuthController {
 	@ApiOperation(value = "login")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Successful login"),
-			@ApiResponse(code = 500, message = "Server error, something wrong")
+			@ApiResponse(code = 422, message = "Invalid authentication data"),
+			@ApiResponse(code = 500, message = "Server error :(")
 	})
 	//@ApiImplicitParams не нужен; параметры передаются в body
 	@PostMapping
@@ -67,19 +71,22 @@ public class AuthController {
 
 		/*Всё хорошо и поэтому мы сохраняем информации о залогинивании в секьюрити контексте*/
 		SecurityContextHolder.getContext().setAuthentication(authenticate);
+		System.err.println("--------------------- AUTHENTICATION -------------------");
+		System.err.println(SecurityContextHolder.getContext().getAuthentication());
 
 		return new ResponseEntity<>(
 				AuthResponse.builder()
-							.login(authRequest.getUserName())
-							.jwtToken(tokenUtils.generateToken(userDetailsService.loadUserByUsername(authRequest.getUserName())))
-							.build()
+						.login(authRequest.getUserName())
+						.jwtToken(tokenUtils.generateToken(userDetailsService.loadUserByUsername(authRequest.getUserName())))
+						.build()
 				, HttpStatus.OK);
 	}
 
 
 	@ApiOperation(value = "registration")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Successful login"),
+			@ApiResponse(code = 200, message = "Successful registration"),
+			@ApiResponse(code = 422, message = "Invalid registration data"),
 			@ApiResponse(code = 500, message = "Server error, something wrong")
 	})
 	//@ApiImplicitParams не нужен; параметры передаются в body

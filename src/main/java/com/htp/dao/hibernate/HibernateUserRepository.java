@@ -6,17 +6,21 @@ import com.htp.domain.hibernate.HibernateUser;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
-@Repository("userHibernateRepository")
+@Repository("hibernateUserRepository")
 public class HibernateUserRepository implements HibernateUserDao {
-	private SessionFactory sessionFactory;
+	private final SessionFactory sessionFactory;
 
-	private EntityManagerFactory entityManagerFactory;
+	private final EntityManagerFactory entityManagerFactory;
 
 	public HibernateUserRepository(SessionFactory sessionFactory, EntityManagerFactory entityManagerFactory) {
 		this.sessionFactory = sessionFactory;
@@ -24,28 +28,39 @@ public class HibernateUserRepository implements HibernateUserDao {
 	}
 
 	@Override
-	public List<HibernateUser> findAll() {
+	public List<HibernateUser> findAll(int pageNum, int pageSize) {
+		final String query = "select user from HibernateUser user order by user.id asc";
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		return entityManager.createQuery("select user from HibernateUser user order by user.id asc", HibernateUser.class).getResultList();
-	}
-
-	@Override
-	public List<HibernateUser> search(String searchParam) {
-		return null;
+		final TypedQuery<HibernateUser> hibernateUserTypedQuery = entityManager.createQuery(query, HibernateUser.class).
+				setFirstResult(pageNum*pageSize).setMaxResults(pageSize);
+		return hibernateUserTypedQuery.getResultList();
 	}
 
 	@Override
 	public Optional<HibernateUser> findById(Long userId) {
-		return Optional.empty();
+		try (Session session = sessionFactory.openSession()) {
+			final HibernateUser hibernateUser = session.find(HibernateUser.class, userId);
+			return Optional.of(hibernateUser);
+		}
+	}
+
+	@Override
+	public Optional<HibernateUser> findByLogin(String login) {
+
+		try (Session session = sessionFactory.openSession()) {
+			final HibernateUser hibernateUser = session.find(HibernateUser.class, login);
+			return Optional.of(hibernateUser);
+		}
 	}
 
 	@Override
 	public HibernateUser findOne(Long userId) {
-		try (Session session = sessionFactory.openSession()) {
+		try(Session session = sessionFactory.openSession()) {
 			return session.find(HibernateUser.class, userId);
 		}
 	}
 
+	@Transactional(rollbackFor = Exception.class, isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
 	@Override
 	public HibernateUser save(HibernateUser user) {
 		try (Session session = sessionFactory.openSession()) {
@@ -54,6 +69,7 @@ public class HibernateUserRepository implements HibernateUserDao {
 		}
 	}
 
+	@Transactional(rollbackFor = Exception.class, isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
 	@Override
 	public HibernateUser update(HibernateUser user) {
 		return save(user);

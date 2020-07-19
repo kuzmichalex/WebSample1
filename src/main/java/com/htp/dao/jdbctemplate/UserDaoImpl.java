@@ -1,8 +1,8 @@
-package com.htp.dao.implementation;
+package com.htp.dao.jdbctemplate;
 
 import com.htp.dao.UserDao;
-import com.htp.domain.Role;
 import com.htp.domain.User;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -79,11 +79,14 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public User findOne(Long itemId) {
-		//search expression
 		final String searchByIdQuery = "select * from m_users where id = :id";
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue(USER_ID, itemId);
-		return namedParameterJdbcTemplate.queryForObject(searchByIdQuery, params, this::rowMapper);
+		try {
+			return namedParameterJdbcTemplate.queryForObject(searchByIdQuery, params, this::rowMapper);
+		} catch (DataAccessException e) {
+			return null;
+		}
 	}
 
 	@Override

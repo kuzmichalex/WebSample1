@@ -20,7 +20,7 @@ public class AuthRequest implements Serializable {
 	private String userName;
 
 	@NotEmpty
-	@ApiModelProperty(required = true, allowableValues = "Admin", dataType = "string")
+	@ApiModelProperty(required = true, allowableValues = "password", dataType = "string")
 	private String password;
 
 }

@@ -1,4 +1,4 @@
-package com.htp.dao.implementation;
+package com.htp.dao.jdbctemplate;
 
 import com.htp.dao.TrainingDao;
 import com.htp.domain.Training;

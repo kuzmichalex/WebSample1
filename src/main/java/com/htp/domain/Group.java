@@ -1,5 +1,7 @@
 package com.htp.domain;
 
+import lombok.Data;
+
 import java.sql.Date;
 import java.util.Objects;
 
@@ -77,4 +79,6 @@ public class Group {
 	public int hashCode() {
 		return Objects.hash(id, name, description, userFounderId, dateFoundation, isDeleted);
 	}
+
+
 }

@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -33,14 +34,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private final UserDetailsService userDetailsService;
 	private final TokenUtils tokenUtils;
-//	private final PasswordEncoder passwordEncoder;
 
 	public WebSecurityConfiguration(@Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService,
 	                                TokenUtils tokenUtils
 	                                ) {
 		this.userDetailsService = userDetailsService;
 		this.tokenUtils = tokenUtils;
-	//	this.passwordEncoder = passwordEncoder;
 	}
 
 	/* В контроллере аутентификации нам нужен AuthenticationManager. Получим его тут
@@ -82,7 +81,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				and().
 				//sessionManagement() - информация о сессии. На не надо, тк информация о залогинивании мы храним в токене
 				authorizeRequests().            //Указываем необходимость авторизировать все запросы
-				antMatchers("/admin/**").hasAnyRole("ROLE_ADMIN").
+				antMatchers("/admin/**").hasAnyRole("ADMIN").
+				antMatchers("/users/**").hasAnyRole("ADMIN", "USER").
+
 				antMatchers("/actuator/**").permitAll().
 				antMatchers("/auth/**").permitAll().
 				antMatchers("/registration/**").permitAll().
@@ -90,13 +91,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				antMatchers("/csrf/**").permitAll().
 				antMatchers("swagger-ui.html#").permitAll().
 				antMatchers("/v2/api-docs", "configuration/ui", "swagger-resources/", "configuration/security/", "/webjars/").permitAll().
-				antMatchers("/users/**").permitAll().
 				antMatchers("/hibernate/users/**").permitAll().
 				antMatchers(HttpMethod.OPTIONS, "/**").permitAll().      //разрешаем доступ ко всем options-запросам
 				anyRequest().authenticated();
 
 		//Добавляем бин в проверку перед всем
 		http.addFilterBefore(authenticationTokenFilterBean(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
+
+		System.err.println("--------------------- AUTHENTICATION -------------------");
+		System.err.println(SecurityContextHolder.getContext().getAuthentication());
+
 	}
 
 	/* здесь мы указываем, какие урл не проверять вовсе*/

@@ -1,13 +1,12 @@
-//JD18 hibernate
+package com.htp.service.hibernate;
 
-package com.htp.dao.hibernate;
 
 import com.htp.domain.hibernate.HibernateUser;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface HibernateUserDao {
+public interface HibernateUserService {
 	List<HibernateUser> findAll(int pageNum, int pageSize);
 
 	Optional<HibernateUser> findById(Long userId);
@@ -21,4 +20,5 @@ public interface HibernateUserDao {
 	HibernateUser update(HibernateUser user);
 
 	int delete(HibernateUser user);
+
 }

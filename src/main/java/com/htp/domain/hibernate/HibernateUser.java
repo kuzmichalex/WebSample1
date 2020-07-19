@@ -1,4 +1,12 @@
 //JD18 hibernate
+/*
+@Entity указывает, что класс является сущностью
+@Table указывает имя таблицы, которую отображает сущность
+@Id Так мы указываем колонку с первичным ключём
+@Column указывает обычную колонку модификатор name указывает имя колонки в базе данных
+@GeneratedValue указывает стратегию заполения поля
+*/
+
 
 package com.htp.domain.hibernate;
 
@@ -31,13 +39,13 @@ public class HibernateUser {
 	@Column
 	private String name;
 
-	@Column(name ="birth_date")
+	@Column(name = "birth_date")
 	private Date birthDate;
 
 	@Column
 	private String password;
 
-	@ManyToMany(mappedBy = "users")
+	@ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonIgnoreProperties("users")
 	private Set<HibernateRole> roles = Collections.emptySet();
 
