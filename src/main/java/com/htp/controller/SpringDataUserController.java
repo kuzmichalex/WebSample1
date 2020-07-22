@@ -36,7 +36,7 @@ public class SpringDataUserController {
 			@ApiImplicitParam(name = "sort", value = "Field to sort", example = "0", defaultValue = "id", dataType = "string", paramType = "query")
 	})
 	@GetMapping
-	public ResponseEntity<Page<HibernateUser>> findAll(@ApiIgnore Pageable pageable) {
+	public ResponseEntity<Page<HibernateUser>> findAllAliveUsers(@ApiIgnore Pageable pageable) {
 		Page<HibernateUser> usersPage = userRepository.findAll(pageable);
 		return new ResponseEntity<>(usersPage, HttpStatus.OK);
 	}

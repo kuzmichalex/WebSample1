@@ -31,8 +31,8 @@ public class HibernateUserRepository implements HibernateUserDao {
 	public List<HibernateUser> findAll(int pageNum, int pageSize) {
 		final String query = "select user from HibernateUser user order by user.id asc";
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		final TypedQuery<HibernateUser> hibernateUserTypedQuery = entityManager.createQuery(query, HibernateUser.class).
-				setFirstResult(pageNum*pageSize).setMaxResults(pageSize);
+		final TypedQuery<HibernateUser> hibernateUserTypedQuery = entityManager.createQuery(query, HibernateUser.class)
+				.setFirstResult(pageNum * pageSize).setMaxResults(pageSize);
 		return hibernateUserTypedQuery.getResultList();
 	}
 
@@ -55,7 +55,7 @@ public class HibernateUserRepository implements HibernateUserDao {
 
 	@Override
 	public HibernateUser findOne(Long userId) {
-		try(Session session = sessionFactory.openSession()) {
+		try (Session session = sessionFactory.openSession()) {
 			return session.find(HibernateUser.class, userId);
 		}
 	}
