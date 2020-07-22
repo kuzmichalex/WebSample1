@@ -6,9 +6,6 @@ public class PasswordEncoderUtil implements org.springframework.security.crypto.
 	private static final PasswordEncoder INSTANCE = new PasswordEncoderUtil();
 
 	public String encode(CharSequence rawPassword) {
-
-		System.err.println("------------------------------------------ PASSWORD:" + rawPassword);
-
 		return rawPassword.toString();
 	}
 

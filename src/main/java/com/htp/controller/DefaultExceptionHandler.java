@@ -50,7 +50,7 @@ public class DefaultExceptionHandler {
 		return new ResponseEntity<>(new ErrorMessage(1003L, "Oh, no! Path variable Type mismatch!"), HttpStatus.BAD_REQUEST);
 	}
 
-	/* Нейдачная аутентификация*/
+	/* Неудачная аутентификация*/
 	@ExceptionHandler(AuthenticationException.class)
 	public ResponseEntity<ErrorMessage> handleAuthenticationException(AuthenticationException e) {
 		log.error(e.getMessage(), e);

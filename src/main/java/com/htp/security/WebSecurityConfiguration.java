@@ -92,13 +92,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				antMatchers("swagger-ui.html#").permitAll().
 				antMatchers("/v2/api-docs", "configuration/ui", "swagger-resources/", "configuration/security/", "/webjars/").permitAll().
 				antMatchers("/hibernate/users/**").permitAll().
+				antMatchers("/springData/**").permitAll().
 				antMatchers(HttpMethod.OPTIONS, "/**").permitAll().      //разрешаем доступ ко всем options-запросам
 				anyRequest().authenticated();
 
 		//Добавляем бин в проверку перед всем
 		http.addFilterBefore(authenticationTokenFilterBean(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
-
-
 	}
 
 	/* здесь мы указываем, какие урл не проверять вовсе*/
