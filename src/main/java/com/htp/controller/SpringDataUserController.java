@@ -1,18 +1,20 @@
 package com.htp.controller;
 
+import com.htp.controller.request.UserCreateRequest;
 import com.htp.dao.springdata.UserRepository;
 import com.htp.domain.hibernate.HibernateUser;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.validation.Valid;
+import java.sql.SQLException;
 
 
 @Slf4j
@@ -21,8 +23,11 @@ import springfox.documentation.annotations.ApiIgnore;
 public class SpringDataUserController {
 	private final UserRepository userRepository;
 
-	public SpringDataUserController(UserRepository userRepository) {
+	private ConversionService conversionService;
+
+	public SpringDataUserController(UserRepository userRepository, ConversionService conversionService) {
 		this.userRepository = userRepository;
+		this.conversionService = conversionService;
 	}
 
 	@ApiOperation(value = "Search with pagination")
@@ -55,5 +60,19 @@ public class SpringDataUserController {
 		return new ResponseEntity<>(userRepository.findByLoginEquals(login), HttpStatus.OK);
 	}
 
+	@ApiOperation(value = "Create user")
+	@ApiResponses({
+			@ApiResponse(code = 201, message = "Successful creation user"),
+			@ApiResponse(code = 422, message = "Failed user creation properties validation"),
+			@ApiResponse(code = 500, message = "Server error, something wrong")
+	})
+	@PostMapping
+	public HibernateUser create(@Valid @RequestBody UserCreateRequest createRequest) throws SQLException {
 
+		HibernateUser user = conversionService.convert(createRequest, HibernateUser.class);
+
+		return userRepository.save(user);
+	}
 }
+
+
