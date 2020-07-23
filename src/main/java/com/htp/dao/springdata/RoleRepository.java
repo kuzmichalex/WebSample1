@@ -15,4 +15,7 @@ public interface RoleRepository extends CrudRepository<HibernateRole, Long>,
 
 	@Override
 	Optional<HibernateRole> findById(Long aLong);
+
+	Optional<HibernateRole> findByRoleName(String roleName);
+
 }

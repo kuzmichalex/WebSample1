@@ -71,6 +71,7 @@ public class SpringDataUserController {
 
 		HibernateUser user = conversionService.convert(createRequest, HibernateUser.class);
 
+		assert user != null;
 		return userRepository.save(user);
 	}
 }
