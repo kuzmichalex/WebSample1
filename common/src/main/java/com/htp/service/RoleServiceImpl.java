@@ -1,6 +1,6 @@
 package com.htp.service;
 
-import com.htp.dao.RoleDao;
+import com.htp.dao.jdbctemplate.RoleDao;
 import com.htp.domain.Role;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

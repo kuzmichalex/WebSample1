@@ -1,6 +1,5 @@
 package com.htp.dao.jdbctemplate;
 
-import com.htp.dao.UserRoleDao;
 import com.htp.domain.UserRole;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

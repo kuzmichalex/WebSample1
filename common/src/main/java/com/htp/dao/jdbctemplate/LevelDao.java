@@ -1,4 +1,4 @@
-package com.htp.dao;
+package com.htp.dao.jdbctemplate;
 
 import com.htp.domain.Level;
 

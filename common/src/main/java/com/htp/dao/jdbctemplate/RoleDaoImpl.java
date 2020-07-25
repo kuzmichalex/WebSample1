@@ -1,6 +1,5 @@
 package com.htp.dao.jdbctemplate;
 
-import com.htp.dao.RoleDao;
 import com.htp.domain.Role;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

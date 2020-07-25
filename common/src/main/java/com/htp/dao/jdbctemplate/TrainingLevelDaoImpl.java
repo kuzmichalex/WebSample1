@@ -1,6 +1,5 @@
 package com.htp.dao.jdbctemplate;
 
-import com.htp.dao.TrainingLevelDao;
 import com.htp.domain.TrainingLevel;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

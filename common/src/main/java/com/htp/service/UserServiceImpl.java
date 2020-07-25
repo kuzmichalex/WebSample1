@@ -1,7 +1,7 @@
 package com.htp.service;
 
-import com.htp.dao.RoleDao;
-import com.htp.dao.UserDao;
+import com.htp.dao.jdbctemplate.RoleDao;
+import com.htp.dao.jdbctemplate.UserDao;
 import com.htp.domain.Role;
 import com.htp.domain.User;
 import com.htp.exceptions.EntityNotFoundException;

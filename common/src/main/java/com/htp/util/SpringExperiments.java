@@ -1,6 +1,6 @@
 package com.htp.util;
 
-import com.htp.dao.UserDao;
+import com.htp.dao.jdbctemplate.UserDao;
 import com.htp.domain.User;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
