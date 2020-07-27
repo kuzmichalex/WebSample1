@@ -12,9 +12,9 @@ public interface RoleService {
 
 	Optional<Role> findByRoleName(String name);
 
-	List<Role>findRolesByUser(long userId);
+	Optional<Role> findOne(Long roleId);
 
-	Role findOne(Long roleId);
+	List<Role> findRolesByUser(long userId);
 
 	Role save(Role role);
 

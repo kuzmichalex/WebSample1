@@ -16,7 +16,6 @@ public class SpringExperiments {
 		//Получаем экземпляр из контекста по классу
 		UserDao userDaoImplByClassName = context.getBean(UserDao.class);
 
-		System.out.println("--------------findAll");
 		List<User> allUsers = userDaoImpl.findAll();
 		for (User user : allUsers) {
 			System.out.printf(" %5s : %20s\n", user.getId(), user.getName());

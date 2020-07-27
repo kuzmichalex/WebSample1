@@ -39,8 +39,8 @@ public class RoleServiceImpl implements RoleService{
 	}
 
 	@Override
-	public Role findOne(Long roleId) {
-		return roleDao.findOne(roleId);
+	public Optional<Role> findOne(Long roleId) {
+		return Optional.ofNullable(roleDao.findOne(roleId));
 	}
 
 	@Override

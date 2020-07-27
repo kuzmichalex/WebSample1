@@ -3,6 +3,7 @@ package com.htp.controller;
 import com.htp.controller.request.RoleCreateRequest;
 import com.htp.controller.request.RoleUpdateRequest;
 import com.htp.domain.Role;
+import com.htp.exceptions.EntityNotFoundException;
 import com.htp.service.RoleService;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ public class RoleController {
 			@ApiResponse(code = 500, message = "Something's wrong. Roles ran away") //Сообщение, что всё плохо
 	})
 	@GetMapping
-	public ResponseEntity<List<Role>> findAll(){
+	public ResponseEntity<List<Role>> findAll() {
 		return new ResponseEntity<>(roleService.findAll(), HttpStatus.OK);
 	}
 
@@ -41,8 +42,10 @@ public class RoleController {
 			@ApiImplicitParam(name = "id", value = "Role database id", example = "1", required = true, dataType = "long", paramType = "path")
 	})
 	@GetMapping("/{id}")
-	public Role findById(@PathVariable("id") Long userId) {
-		return roleService.findOne(userId);
+	public Role findById(@PathVariable("id") Long roleId) {
+		final Optional<Role> one = roleService.findOne(roleId);
+		if (one.isEmpty()) throw new EntityNotFoundException("role witch id = " + roleId + " not found");
+		else return one.get();
 	}
 
 

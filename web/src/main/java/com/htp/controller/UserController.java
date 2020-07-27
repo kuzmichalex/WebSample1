@@ -6,7 +6,6 @@ import com.htp.domain.Role;
 import com.htp.domain.User;
 import com.htp.exceptions.EntityNotFoundException;
 import com.htp.security.util.PrincipalUtil;
-import com.htp.service.UserService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,9 +21,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-	private final UserService userService;
+	private final com.htp.service.userService userService;
 
-	public UserController(UserService userService) {
+	public UserController(com.htp.service.userService userService) {
 		this.userService = userService;
 	}
 
@@ -82,7 +81,7 @@ public class UserController {
 	@PostMapping
 	public com.htp.domain.User create(@Valid @RequestBody UserCreateRequest createRequest, Principal principal) {
 
-		log.info("User " + PrincipalUtil.getUserName(principal) + " create " + createRequest.getLogin());
+		log.info("User " + PrincipalUtil.getUserLogin(principal) + " create " + createRequest.getLogin());
 		com.htp.domain.User user = new com.htp.domain.User();
 		user.setLogin(createRequest.getLogin());
 		user.setName(createRequest.getName());

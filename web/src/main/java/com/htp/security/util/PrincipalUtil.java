@@ -15,7 +15,7 @@ import java.util.Collection;
 * мы можем прописать параметр Principal principal, он заавтовайрится и можем пользоваться. */
 
 public class PrincipalUtil {
-	public static String getUserName(Principal principal) {
+	public static String getUserLogin(Principal principal) {
 		Object castedPrincipal = ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
 		return ((User) castedPrincipal).getUsername();
 	}

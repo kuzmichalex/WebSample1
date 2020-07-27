@@ -82,18 +82,26 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 						authorizeRequests().            //Указываем необходимость авторизировать все запросы
 				antMatchers("/admin/**").hasAnyRole("ADMIN").
 				antMatchers("/users/**").hasAnyRole("ADMIN", "USER").
+				antMatchers("/myPage/**").hasAnyRole("ADMIN", "USER", "TRAINER").
 
+				//Разрешённые всем URL
+						antMatchers("/role/**").permitAll().
+				antMatchers("/hibernate/users/**").permitAll().
+				antMatchers("/springData/**").permitAll().
 				antMatchers("/auth/**").permitAll().
-				antMatchers("/statistics/**").permitAll().
-				antMatchers("/actuator/**").permitAll().
 				antMatchers("/registration/**").permitAll().
+				antMatchers("/statistics/**").permitAll().
 				antMatchers("/logout/**").permitAll().
+
+
+				//Сваггер
+						antMatchers("/actuator/**").permitAll().
 				antMatchers("/csrf/**").permitAll().
 				antMatchers("swagger-ui.html#").permitAll().
 				antMatchers("/v2/api-docs", "configuration/ui", "swagger-resources/", "configuration/security/", "/webjars/").permitAll().
-				antMatchers("/hibernate/users/**").permitAll().
-				antMatchers("/springData/**").permitAll().
-				antMatchers(HttpMethod.OPTIONS, "/**").permitAll().      //разрешаем доступ ко всем options-запросам
+
+				//разрешаем доступ ко всем options-запросам
+						antMatchers(HttpMethod.OPTIONS, "/**").permitAll().
 				anyRequest().authenticated();
 
 		//Добавляем бин в проверку перед всем

@@ -20,12 +20,10 @@
 
 
     <dependencies>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
 
         <!--        spring boot будет регистрировать бины DataSource, EntityManagerFactory, TransactionManager
          и считывание информации для подключения к базе данных
@@ -136,12 +134,25 @@
             <version>4.12</version>
         </dependency>
 
+        <!--        Кэш-->
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
             <version>2.8.5</version>
         </dependency>
 
-    </dependencies>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>6.5.2</version>
+        </dependency>
 
+
+        <!--        Миграция БД-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.flywaydb</groupId>-->
+        <!--            <artifactId>flyway-core</artifactId>-->
+        <!--            <version>6.5.2</version>-->
+        <!--        </dependency>-->
+    </dependencies>
 </project>

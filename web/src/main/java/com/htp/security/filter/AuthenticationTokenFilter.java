@@ -40,7 +40,6 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 		final String authToken = httpReq.getHeader(ApplicationHeaders.AUTH_TOKEN);
 		String userNameFromToken;
 
-
 		//Всё проверки идут если в принципе есть токен. А то даже до сваггера добраться нельзя
 		//Проверяем, есть ли у нас токен и не повреждён ли он, и проверем, что в контексте его нет
 		//если токен валидный, в контекст отправляем

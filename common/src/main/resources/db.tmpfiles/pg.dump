@@ -1,0 +1,317 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 12.2
+-- Dumped by pg_dump version 12.2
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Data for Name: m_features; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.m_features VALUES (1, 'Maintenance, warm up', 'Moderate activity', false);
+INSERT INTO public.m_features VALUES (2, 'Fitness training, fat buring', 'Weight control', false);
+INSERT INTO public.m_features VALUES (3, 'Cardio, Endurance training', 'Aerobic', false);
+INSERT INTO public.m_features VALUES (4, 'Hardcore training', 'Anaerobic', false);
+INSERT INTO public.m_features VALUES (5, 'Maximum effort', 'VO2 max', false);
+INSERT INTO public.m_features VALUES (6, 'Game', 'Game', false);
+INSERT INTO public.m_features VALUES (7, 'Relax', 'Relax', false);
+
+
+--
+-- Data for Name: m_users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.m_users VALUES (423, 'BadAssSportsman', 'Thin Billy', '2014-06-19', 'BADASS');
+INSERT INTO public.m_users VALUES (2, 'Vasya', 'Vasili Pupkin', '2015-06-05', '1234');
+INSERT INTO public.m_users VALUES (3, 'user111', 'User Userovich', '2013-06-07', '111');
+INSERT INTO public.m_users VALUES (4, 'Vasilisa', 'Vaslilisa Pupkina', '2007-06-15', 'princess');
+INSERT INTO public.m_users VALUES (424, 'Ines', 'Fat Ines', '2018-06-15', 'fat');
+INSERT INTO public.m_users VALUES (33, 'randomized', 'random', '2007-06-15', 'undefined');
+INSERT INTO public.m_users VALUES (34, 'noname', 'noname', '2003-02-01', 'no password');
+INSERT INTO public.m_users VALUES (35, 'BENDER THE GREAT', 'Bender Rodriguez', '3000-06-07', 'Bite my shiny metal ass');
+INSERT INTO public.m_users VALUES (1643, '1string', '1string', '1970-01-01', '1string');
+INSERT INTO public.m_users VALUES (1, 'Admin', 'Administrator', '2013-05-31', 'password');
+INSERT INTO public.m_users VALUES (1664, 't1', 't1', '1980-01-01', 't1');
+INSERT INTO public.m_users VALUES (1665, 'string', 'string', '1970-01-01', 'string');
+INSERT INTO public.m_users VALUES (1674, '1', 'string', '1970-01-01', 'string');
+INSERT INTO public.m_users VALUES (1675, '2', 'string', '1970-01-01', 'string');
+INSERT INTO public.m_users VALUES (1678, 'string1', 'string1', '1980-01-01', 'string');
+INSERT INTO public.m_users VALUES (1681, '213123', 'string1', '1980-01-01', 'string');
+INSERT INTO public.m_users VALUES (1703, 'aa', 'aa', '1972-01-01', 'aa');
+INSERT INTO public.m_users VALUES (1713, 's111g', '1111', '1973-01-01', '111');
+INSERT INTO public.m_users VALUES (1715, 's1111g', '11111', '1973-01-01', '1111');
+INSERT INTO public.m_users VALUES (1722, 'sprind2DateCreate', 'sprind2DateCreate', '1971-01-02', 'sprind2DateCreate');
+
+
+--
+-- Data for Name: m_trainings; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.m_trainings VALUES (1, 'Racewalking', 'Racewalking', 1);
+INSERT INTO public.m_trainings VALUES (4, 'Swimming', 'Swimming', 1);
+INSERT INTO public.m_trainings VALUES (5, 'Push-Up', 'Push-Up', 1);
+INSERT INTO public.m_trainings VALUES (2, 'Running', 'Long distance', 1);
+INSERT INTO public.m_trainings VALUES (3, 'Running (Sprinting)', 'Short distance', 1);
+
+
+--
+-- Data for Name: l_training_features; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: m_levels; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.m_levels VALUES (1, 'Beginner', false);
+INSERT INTO public.m_levels VALUES (2, 'Intermediate', false);
+INSERT INTO public.m_levels VALUES (3, 'Advanced', false);
+
+
+--
+-- Data for Name: l_training_levels; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: m_groups; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: l_user_groups; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: m_roles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.m_roles VALUES (3, 'ROLE_USER', false);
+INSERT INTO public.m_roles VALUES (2, 'ROLE_TRAINER', false);
+INSERT INTO public.m_roles VALUES (4, 'ROLE_BANNED', false);
+INSERT INTO public.m_roles VALUES (1, 'ROLE_ADMIN', false);
+INSERT INTO public.m_roles VALUES (371, 'string', false);
+
+
+--
+-- Data for Name: l_user_roles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.l_user_roles VALUES (1, 1, 1, false);
+INSERT INTO public.l_user_roles VALUES (72, 1, 2, false);
+INSERT INTO public.l_user_roles VALUES (73, 1, 3, false);
+INSERT INTO public.l_user_roles VALUES (77, 423, 2, false);
+INSERT INTO public.l_user_roles VALUES (78, 423, 3, false);
+INSERT INTO public.l_user_roles VALUES (74, 2, 3, false);
+INSERT INTO public.l_user_roles VALUES (75, 3, 3, false);
+INSERT INTO public.l_user_roles VALUES (76, 4, 3, false);
+
+
+--
+-- Data for Name: m_activity_state; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.m_activity_state VALUES (1, 'Planned', false);
+INSERT INTO public.m_activity_state VALUES (2, 'Started', false);
+INSERT INTO public.m_activity_state VALUES (3, 'Finished', false);
+INSERT INTO public.m_activity_state VALUES (4, 'Cancelled', false);
+
+
+--
+-- Data for Name: m_activity; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: m_training_programs; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: m_user_history; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.m_user_history VALUES (8, 1, '2020-06-06 23:27:43.256', 77, 180);
+INSERT INTO public.m_user_history VALUES (9, 1, '2020-06-06 23:27:46.785', 77, 180);
+INSERT INTO public.m_user_history VALUES (10, 1, '2020-06-06 23:29:25.231', 81, 188);
+INSERT INTO public.m_user_history VALUES (11, 1, '2020-06-13 03:17:38.847', 84, 181);
+INSERT INTO public.m_user_history VALUES (12, 1, '2020-06-13 03:17:55.906', 85, 187);
+INSERT INTO public.m_user_history VALUES (13, 1, '2020-06-13 12:52:09.058', 72, 179);
+INSERT INTO public.m_user_history VALUES (14, 1, '2020-06-13 13:09:34.393', 81, 174);
+INSERT INTO public.m_user_history VALUES (15, 1, '2020-06-13 13:10:54.201', 77, 173);
+INSERT INTO public.m_user_history VALUES (16, 1, '2020-06-13 13:27:46.478', 74, 173);
+INSERT INTO public.m_user_history VALUES (17, 1, '2020-06-13 13:42:44.327', 84, 182);
+INSERT INTO public.m_user_history VALUES (18, 1, '2020-06-13 13:44:33.376', 77, 171);
+INSERT INTO public.m_user_history VALUES (19, 1, '2020-06-13 16:59:22.871', 180, 78);
+INSERT INTO public.m_user_history VALUES (20, 1, '2020-06-13 00:00:00', 177, 72);
+INSERT INTO public.m_user_history VALUES (21, 1, '1970-01-01 00:00:00', 183, 71);
+INSERT INTO public.m_user_history VALUES (22, 1, '1970-01-15 00:00:00', 175, 82);
+INSERT INTO public.m_user_history VALUES (23, 1, '1970-01-01 00:00:00', 178, 69);
+INSERT INTO public.m_user_history VALUES (24, 1, '2020-06-13 00:00:00', 185, 83);
+INSERT INTO public.m_user_history VALUES (25, 1, '2020-06-13 00:00:00', 182, 76);
+INSERT INTO public.m_user_history VALUES (26, 1, '2020-06-13 00:00:00', 82, 181);
+
+
+--
+-- Name: l_training_features_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.l_training_features_id_seq', 1, false);
+
+
+--
+-- Name: l_training_levels_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.l_training_levels_id_seq', 1, false);
+
+
+--
+-- Name: l_user_groups_id_group_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.l_user_groups_id_group_seq', 1, false);
+
+
+--
+-- Name: l_user_groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.l_user_groups_id_seq', 1, false);
+
+
+--
+-- Name: l_user_groups_id_user_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.l_user_groups_id_user_seq', 1, false);
+
+
+--
+-- Name: l_user_roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.l_user_roles_id_seq', 78, true);
+
+
+--
+-- Name: m_activity_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.m_activity_id_seq', 1, false);
+
+
+--
+-- Name: m_activity_id_training_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.m_activity_id_training_seq', 1, false);
+
+
+--
+-- Name: m_activity_state_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.m_activity_state_id_seq', 1, false);
+
+
+--
+-- Name: m_features_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.m_features_id_seq', 1, false);
+
+
+--
+-- Name: m_groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.m_groups_id_seq', 1, false);
+
+
+--
+-- Name: m_groups_id_user_founder_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.m_groups_id_user_founder_seq', 1, false);
+
+
+--
+-- Name: m_levels_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.m_levels_id_seq', 1, false);
+
+
+--
+-- Name: m_roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.m_roles_id_seq', 371, true);
+
+
+--
+-- Name: m_training_programs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.m_training_programs_id_seq', 1, false);
+
+
+--
+-- Name: m_training_programs_id_user_author_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.m_training_programs_id_user_author_seq', 1, false);
+
+
+--
+-- Name: m_trainings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.m_trainings_id_seq', 45, true);
+
+
+--
+-- Name: m_user_history_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.m_user_history_id_seq', 32, true);
+
+
+--
+-- Name: m_user_history_id_user_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.m_user_history_id_user_seq', 1, false);
+
+
+--
+-- Name: m_users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.m_users_id_seq', 1723, true);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

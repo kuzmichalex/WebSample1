@@ -18,4 +18,8 @@ public interface RoleRepository extends CrudRepository<HibernateRole, Long>,
 
 	Optional<HibernateRole> findByRoleName(String roleName);
 
+//	@Modifying
+//	@Query(value = "insert into m_roles ( role_name ) values (:role_name)" , nativeQuery = true)
+//	void save(HibernateRole role);
+
 }

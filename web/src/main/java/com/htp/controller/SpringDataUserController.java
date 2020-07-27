@@ -22,8 +22,7 @@ import java.sql.SQLException;
 @RequestMapping("/springData/users")
 public class SpringDataUserController {
 	private final UserRepository userRepository;
-
-	private ConversionService conversionService;
+	private final ConversionService conversionService;
 
 	public SpringDataUserController(UserRepository userRepository, ConversionService conversionService) {
 		this.userRepository = userRepository;
@@ -33,12 +32,13 @@ public class SpringDataUserController {
 	@ApiOperation(value = "Search with pagination")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Successful loading users"),
+			@ApiResponse(code = 400, message = "Invalid sort param"),
 			@ApiResponse(code = 500, message = "Server error, something wrong")
 	})
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "page", value = "Page number", example = "0", defaultValue = "0", dataType = "int", paramType = "query"),
 			@ApiImplicitParam(name = "size", value = "Items per page", example = "3", defaultValue = "3", dataType = "int", paramType = "query"),
-			@ApiImplicitParam(name = "sort", value = "Field to sort", example = "0", defaultValue = "id", dataType = "string", paramType = "query")
+			@ApiImplicitParam(name = "sort", value = "Field to sort", example = "id", defaultValue = "id", dataType = "string", paramType = "query")
 	})
 	@GetMapping
 	public ResponseEntity<Page<HibernateUser>> findAllAliveUsers(@ApiIgnore Pageable pageable) {

@@ -1,7 +1,12 @@
 package com.htp.dao.jdbctemplate;
 
 import com.htp.domain.Role;
+import com.htp.exceptions.EntityNotFoundException;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -17,10 +22,12 @@ import java.util.Optional;
 
 //Аннотация указывает спрингу, что класс применяется для доступа к базе данных (DAO)
 @Repository("roleRepositoryJdbcTemplate")
+@CacheConfig(cacheNames = {"RolesCache"})
 public class RoleDaoImpl implements RoleDao {
 	//Наименования колонок в таблице m_roles
 	public static final String ROLE_ID = "id";
 	public static final String ROLE_NAME = "role_name";
+	public static final String IS_DELETED = "is_deleted";
 
 	private final JdbcTemplate jdbcTemplate;
 	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -31,35 +38,42 @@ public class RoleDaoImpl implements RoleDao {
 	}
 
 	private Role rowMapper(ResultSet resultSet, int i) throws SQLException {
-		Role user = new Role();
-		user.setId(resultSet.getLong(ROLE_ID));
-		user.setRoleName(resultSet.getString(ROLE_NAME));
-		return user;
+		Role role = new Role();
+		role.setId(resultSet.getLong(ROLE_ID));
+		role.setRoleName(resultSet.getString(ROLE_NAME));
+		role.setDeleted(false);
+		return role;
 	}
 
 	@Override
+	@Cacheable
 	public List<Role> findAll() {
 		final String findAllQuery = "select * from m_roles order by id desc";
 		return jdbcTemplate.query(findAllQuery, this::rowMapper);
 	}
 
 	@Override
+	@Cacheable
 	public Optional<Role> findById(long roleID) {
 		return Optional.ofNullable(findOne(roleID));
 	}
 
-
 	@Override
+	@Cacheable
 	public Role findOne(Long itemId) {
 		//search expression
 		final String searchByIDQuery = "select * from m_roles where id = :id";
-
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue(ROLE_ID, itemId);
-		return namedParameterJdbcTemplate.queryForObject(searchByIDQuery, params, this::rowMapper);
+		try {
+			return namedParameterJdbcTemplate.queryForObject(searchByIDQuery, params, this::rowMapper);
+		} catch (DataAccessException e) {
+			throw new EntityNotFoundException("Role witch id=" + itemId + " not found");
+		}
 	}
 
 	@Override
+	@Cacheable
 	public Optional<Role> findByRoleName(String roleName) {
 		final String searchByIDQuery = "select * from m_roles where role_name = :role_name";
 		MapSqlParameterSource params = new MapSqlParameterSource();
@@ -72,6 +86,7 @@ public class RoleDaoImpl implements RoleDao {
 	}
 
 	@Override
+	@Cacheable
 	public List<Role> findRolesByUser(long userId) {
 		final String searchRolesByUser = "select * from m_roles role where role.id in " +
 				"(select role_id from l_user_roles where user_id = :user_id )";
@@ -82,6 +97,8 @@ public class RoleDaoImpl implements RoleDao {
 	}
 
 	@Override
+	@Cacheable
+	@Modifying
 	public Role save(Role item) {
 		final String insertQuery = "insert into m_roles ( role_name ) values (:role_name)";
 
@@ -95,6 +112,8 @@ public class RoleDaoImpl implements RoleDao {
 	}
 
 	@Override
+	@Cacheable
+	@Modifying
 	public Role update(Role item) {
 		final String updateQuery = "update m_roles set role_name = :role_name where id = :id";
 		MapSqlParameterSource params = new MapSqlParameterSource();
@@ -107,10 +126,11 @@ public class RoleDaoImpl implements RoleDao {
 	}
 
 	@Override
+	@Cacheable
+	@Modifying
 	public int delete(Role item) {
-		final String deleteQuery = "delete from m_roles where id=:id";
-		MapSqlParameterSource params = new MapSqlParameterSource();
-		params.addValue(ROLE_ID, item.getId());
-		return namedParameterJdbcTemplate.update(deleteQuery, params);
+		item.setDeleted(true);
+		update(item);
+		return 1;
 	}
 }

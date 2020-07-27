@@ -8,8 +8,10 @@ import io.jsonwebtoken.MalformedJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,12 +24,6 @@ import javax.validation.ConstraintViolationException;
 @ControllerAdvice
 public class DefaultExceptionHandler {
 
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-
-	public ResponseEntity<ErrorMessage> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-		log.error(e.getMessage(), e);
-		return new ResponseEntity<>(new ErrorMessage(1000L, e.getLocalizedMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
-	}
 
 	/* Исключения валидации path variable */
 	@ExceptionHandler(ConstraintViolationException.class)
@@ -36,11 +32,11 @@ public class DefaultExceptionHandler {
 		return new ResponseEntity<>(new ErrorMessage(1001L, e.getLocalizedMessage()), HttpStatus.BAD_REQUEST);
 	}
 
-	/* Что-то не так с ообщением. Вероятно, засули вместо даты непойми что*/
-	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ResponseEntity<ErrorMessage> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+	/*Неправильнгая колонка для сортировки в поиске с пагинацией*/
+	@ExceptionHandler(PropertyReferenceException.class)
+	public ResponseEntity<ErrorMessage> handlePropertyReferenceException(PropertyReferenceException e) {
 		log.error(e.getMessage(), e);
-		return new ResponseEntity<>(new ErrorMessage(1002L, e.getLocalizedMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
+		return new ResponseEntity<>(new ErrorMessage(1002L, e.getLocalizedMessage()), HttpStatus.BAD_REQUEST);
 	}
 
 	/* несовпадения типа. В path variable буквы, а мы наивно цифры ждём! */
@@ -49,6 +45,20 @@ public class DefaultExceptionHandler {
 		log.error(e.getMessage(), e);
 		return new ResponseEntity<>(new ErrorMessage(1003L, "Oh, no! Path variable Type mismatch!"), HttpStatus.BAD_REQUEST);
 	}
+
+	/* Что-то не так с ообщением. Вероятно, засули вместо даты непойми что*/
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<ErrorMessage> handleHttpMessageNotReadableException(HttpMessageConversionException e) {
+		log.error(e.getMessage(), e);
+		return new ResponseEntity<>(new ErrorMessage(1004L, e.getLocalizedMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
+	}
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<ErrorMessage> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+		log.error(e.getMessage(), e);
+		return new ResponseEntity<>(new ErrorMessage(1005L, e.getLocalizedMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
+	}
+
 
 	/* Неудачная аутентификация*/
 	@ExceptionHandler(AuthenticationException.class)
@@ -84,7 +94,6 @@ public class DefaultExceptionHandler {
 		log.error(e.getMessage(), e);
 		return new ResponseEntity<>(new ErrorMessage(9001L, e.getLocalizedMessage()), HttpStatus.NOT_FOUND);
 	}
-
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorMessage> handleOthersException(Exception e) {

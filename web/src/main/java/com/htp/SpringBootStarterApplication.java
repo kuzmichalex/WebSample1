@@ -88,7 +88,7 @@ public class SpringBootStarterApplication {
 
 	@Bean
 	public CacheManager cacheManager() {
-		CaffeineCacheManager usersAdmins = new CaffeineCacheManager("usersAdmins");
+		CaffeineCacheManager usersAdmins = new CaffeineCacheManager("usersAdmins", "RolesCache");
 		usersAdmins.setCaffeine(cacheProperties());
 		return usersAdmins;
 	}
