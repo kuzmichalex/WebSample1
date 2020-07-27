@@ -1,17 +1,16 @@
 package com.htp.aspect;
 
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
-
+@Slf4j
 @Component
 @Aspect
 public class DaoTimeExecAspect {
-	private static final Logger log = Logger.getLogger(DaoTimeExecAspect.class);
 
 	//Указываем, куда будет внедряться логика. В данном случае в DAO-методы
 	@Pointcut("execution(* com.htp.dao.jdbctemplate.*.*(..))")

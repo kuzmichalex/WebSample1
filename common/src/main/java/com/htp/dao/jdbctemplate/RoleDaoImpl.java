@@ -2,7 +2,6 @@ package com.htp.dao.jdbctemplate;
 
 import com.htp.domain.Role;
 import com.htp.exceptions.EntityNotFoundException;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -22,7 +21,6 @@ import java.util.Optional;
 
 //Аннотация указывает спрингу, что класс применяется для доступа к базе данных (DAO)
 @Repository("roleRepositoryJdbcTemplate")
-@CacheConfig(cacheNames = {"RolesCache"})
 public class RoleDaoImpl implements RoleDao {
 	//Наименования колонок в таблице m_roles
 	public static final String ROLE_ID = "id";
@@ -46,20 +44,17 @@ public class RoleDaoImpl implements RoleDao {
 	}
 
 	@Override
-	@Cacheable
 	public List<Role> findAll() {
 		final String findAllQuery = "select * from m_roles order by id desc";
 		return jdbcTemplate.query(findAllQuery, this::rowMapper);
 	}
 
 	@Override
-	@Cacheable
 	public Optional<Role> findById(long roleID) {
 		return Optional.ofNullable(findOne(roleID));
 	}
 
 	@Override
-	@Cacheable
 	public Role findOne(Long itemId) {
 		//search expression
 		final String searchByIDQuery = "select * from m_roles where id = :id";
@@ -73,7 +68,6 @@ public class RoleDaoImpl implements RoleDao {
 	}
 
 	@Override
-	@Cacheable
 	public Optional<Role> findByRoleName(String roleName) {
 		final String searchByIDQuery = "select * from m_roles where role_name = :role_name";
 		MapSqlParameterSource params = new MapSqlParameterSource();
@@ -97,8 +91,6 @@ public class RoleDaoImpl implements RoleDao {
 	}
 
 	@Override
-	@Cacheable
-	@Modifying
 	public Role save(Role item) {
 		final String insertQuery = "insert into m_roles ( role_name ) values (:role_name)";
 
@@ -112,7 +104,6 @@ public class RoleDaoImpl implements RoleDao {
 	}
 
 	@Override
-	@Cacheable
 	@Modifying
 	public Role update(Role item) {
 		final String updateQuery = "update m_roles set role_name = :role_name where id = :id";
@@ -126,7 +117,6 @@ public class RoleDaoImpl implements RoleDao {
 	}
 
 	@Override
-	@Cacheable
 	@Modifying
 	public int delete(Role item) {
 		item.setDeleted(true);

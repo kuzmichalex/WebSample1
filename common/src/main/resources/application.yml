@@ -7,7 +7,7 @@ spring:
     hikari:
       maximum-pool-size: 10
   flyway:
-    enabled: true
+    enabled: false
     ignore-missing-migrations: true
     locations: classpath:/migration
     baseline-on-migrate: true

@@ -88,9 +88,9 @@ public class SpringBootStarterApplication {
 
 	@Bean
 	public CacheManager cacheManager() {
-		CaffeineCacheManager usersAdmins = new CaffeineCacheManager("usersAdmins", "RolesCache");
-		usersAdmins.setCaffeine(cacheProperties());
-		return usersAdmins;
+		CaffeineCacheManager rolesCache = new CaffeineCacheManager("RolesCache");
+		rolesCache.setCaffeine(cacheProperties());
+		return rolesCache;
 	}
 
 	public Caffeine<Object, Object> cacheProperties() {
@@ -101,6 +101,5 @@ public class SpringBootStarterApplication {
 				.weakKeys()
 				.recordStats();
 	}
-
 
 }
