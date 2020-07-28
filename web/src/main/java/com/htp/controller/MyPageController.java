@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;
 import java.util.Optional;
@@ -31,12 +32,13 @@ public class MyPageController {
 
 	@ApiOperation(value = "My Page") //Наименование в документации
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Ok. All roles found"),              //Сообщение об успешном поиске
-			@ApiResponse(code = 500, message = "Something's wrong. Roles ran away") //Сообщение, что всё плохо
+			@ApiResponse(code = 200, message = "Ok"),              //Сообщение об успешном поиске
+			@ApiResponse(code = 500, message = "Server upal") //Сообщение, что всё плохо
 	})
+
 	@ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
 	@GetMapping
-	public ResponseEntity<MyPageInfo> myPage(Principal principal) {
+	public ResponseEntity<MyPageInfo> myPage(@ApiIgnore Principal principal) {
 		final String userLogin = PrincipalUtil.getUserLogin(principal);
 		final Optional<HibernateUser> user = userService.findByLogin(userLogin);
 		if (user.isEmpty()) throw new EntityNotFoundException("Wow! Something is wrong!");

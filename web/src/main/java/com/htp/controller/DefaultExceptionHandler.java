@@ -95,6 +95,7 @@ public class DefaultExceptionHandler {
 		return new ResponseEntity<>(new ErrorMessage(9001L, e.getLocalizedMessage()), HttpStatus.NOT_FOUND);
 	}
 
+	/* Все прочие ексепшены. Если сработает - значит, где-то недосмотр*/
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorMessage> handleOthersException(Exception e) {
 		/* Handles all other exceptions. Status code 500. */

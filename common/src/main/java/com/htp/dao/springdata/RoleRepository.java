@@ -21,6 +21,14 @@ public interface RoleRepository extends CrudRepository<HibernateRole, Long>,
 	@Cacheable
 	Optional<HibernateRole> findByRoleName(String roleName);
 
+//	select * from m_roles role where role.id in " +
+//			"(select role_id from l_user_roles where user_id = :user_id )
+//	@Query(value = "select * from m_roles role where role.id in " +
+//			"(select role_id from l_user_roles where user_id = :user_id )")
+//	)
+//	Optional<HibernateRole> findRolesByUsers(HibernateUser user);
+
+
 //	@Modifying
 //	@Query(value = "insert into m_roles ( role_name ) values (:role_name)" , nativeQuery = true)
 //	void save(HibernateRole role);

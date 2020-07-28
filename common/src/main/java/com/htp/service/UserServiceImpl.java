@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements userService {
+public class UserServiceImpl implements UserService {
 
 	private final UserDao userDao;
 	private final RoleDao roleDao;

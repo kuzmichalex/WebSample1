@@ -2,7 +2,6 @@ package com.htp.dao.jdbctemplate;
 
 import com.htp.domain.Role;
 import com.htp.exceptions.EntityNotFoundException;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.repository.Modifying;
@@ -80,7 +79,6 @@ public class RoleDaoImpl implements RoleDao {
 	}
 
 	@Override
-	@Cacheable
 	public List<Role> findRolesByUser(long userId) {
 		final String searchRolesByUser = "select * from m_roles role where role.id in " +
 				"(select role_id from l_user_roles where user_id = :user_id )";

@@ -6,6 +6,7 @@ import com.htp.controller.request.AuthResponse;
 import com.htp.controller.request.UserCreateRequest;
 import com.htp.domain.User;
 import com.htp.security.util.TokenUtils;
+import com.htp.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -37,11 +38,11 @@ public class AuthController {
 	/* Наша имплементация UserDetailService */
 	private final UserDetailsService userDetailsService;
 
-	private final com.htp.service.userService userService;
+	private final UserService userService;
 
 	public AuthController(TokenUtils tokenUtils, AuthenticationManager authenticationManager,
 	                      @Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService,
-	                      com.htp.service.userService userService) {
+	                      UserService userService) {
 		this.tokenUtils = tokenUtils;
 		this.authenticationManager = authenticationManager;
 		this.userDetailsService = userDetailsService;

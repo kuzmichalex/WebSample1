@@ -51,8 +51,8 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 				doErrorJsonRequest(res, "Hacker attack detected! invalid JWT token: " + e.getMessage());
 				return;
 			}
-
 			try {
+
 				if (SecurityContextHolder.getContext().getAuthentication() == null) {
 					final UserDetails userDetails = userDetailsService.loadUserByUsername(userNameFromToken);
 					if (Boolean.TRUE.equals(tokenUtils.validateToken(authToken, userDetails))) {
@@ -68,6 +68,8 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 				doErrorJsonRequest(res, "Hacker attack detected! Invalid JWT auth: " + e.getMessage());
 				return;
 			}
+
+
 		}
 		chain.doFilter(req, res);
 	}
