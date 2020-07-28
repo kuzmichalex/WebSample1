@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class DaoTimeExecAspect {
 
 	//Указываем, куда будет внедряться логика. В данном случае в DAO-методы
-	@Pointcut("execution(* com.htp.dao.jdbctemplate.*.*(..))")
+	@Pointcut("execution(* com.htp.dao.*.*.*(..))")
 	public void aroundDaoImplPointcut() { /* Pointcut methods should have empty body! */ }
 
 	@Around("aroundDaoImplPointcut()")

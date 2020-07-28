@@ -14,8 +14,14 @@ public class StatisticsServiceImpl implements StatisticsService{
 	public StatisticsServiceImpl(@Qualifier("daoInvokeStatisticsAspect") DaoInvokeCountAspect daoInvokeCountAspect) {
 		invokeCountAspect = daoInvokeCountAspect;
 	}
+
 	@Override
 	public Map<String, Integer> getStatistics() {
 		return invokeCountAspect.getMethodInvocationsCounter();
+	}
+
+	@Override
+	public void clear() {
+		invokeCountAspect.clear();
 	}
 }

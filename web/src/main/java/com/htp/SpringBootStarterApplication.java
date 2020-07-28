@@ -26,6 +26,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 
@@ -65,6 +66,7 @@ public class SpringBootStarterApplication {
 		factoryBean.setPackagesToScan(SCAN_PACHAGES);
 		factoryBean.setDataSource(dataSource);
 		factoryBean.setAnnotatedPackages(SCAN_PACHAGES);
+		factoryBean.setHibernateProperties(getAdditionalProperties());
 		factoryBean.afterPropertiesSet();
 		return factoryBean.getObject();
 	}
@@ -85,6 +87,22 @@ public class SpringBootStarterApplication {
 		return em;
 	}
 
+	private Properties getAdditionalProperties() {
+		Properties properties = new Properties();
+
+		// See: application.properties
+		properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQL10Dialect");
+		properties.put("hibernate.show_sql", "true");
+		properties.put("hibernate.connection.characterEncoding", "utf8mb4");
+		properties.put("hibernate.connection.CharSet", "utf8mb4");
+		properties.put("hibernate.connection.useUnicode", "true");
+		properties.put("current_session_context_class", "org.springframework.orm.hibernate5.SpringSessionContext");
+		properties.put("hibernate.javax.cache.provider", "org.ehcache.jsr107.EhcacheCachingProvider");
+		properties.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
+		properties.put("hibernate.cache.use_second_level_cache", "true");
+		properties.put("hibernate.cache.use_query_cache", "true");
+		return properties;
+	}
 
 	@Bean
 	public CacheManager cacheManager() {

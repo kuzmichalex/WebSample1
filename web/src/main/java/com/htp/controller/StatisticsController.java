@@ -23,4 +23,11 @@ public class StatisticsController {
 	public ResponseEntity<Map<String, Integer>> statistics() {
 		return new ResponseEntity<>(statisticsService.getStatistics(), HttpStatus.OK);
 	}
+
+	@GetMapping("/clear")
+	public ResponseEntity<Map<String, Integer>> clearStatistics() {
+		statisticsService.clear();
+		return new ResponseEntity<>(statisticsService.getStatistics(), HttpStatus.OK);
+	}
+
 }
