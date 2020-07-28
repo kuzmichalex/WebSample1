@@ -20,13 +20,17 @@ public class DaoInvokeCountAspect {
 	}
 
 	//Указываем, куда будет внедряться логика. В данном случае в DAO-методы
-	@Pointcut("execution(* com.htp.dao.jdbctemplate.*.*(..))")
+	@Pointcut("execution(* com.htp.dao.*.*.*(..))")
 	public void beforeDaoPointcut() { /* Pointcut methods should have empty body! */ }
 
 	@Before("beforeDaoPointcut()")
 	public void logBefore(JoinPoint joinPoint) {
 		final String methodName = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
 		methodInvocationsCounter.merge(methodName, 1, Integer::sum);
+	}
+
+	public void clear() {
+		methodInvocationsCounter.clear();
 	}
 }
 
