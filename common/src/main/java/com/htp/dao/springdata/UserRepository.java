@@ -27,7 +27,6 @@ public interface UserRepository extends CrudRepository<HibernateUser, Long>,
 			" where r.isDeleted = false and ur.isDeleted = false")
 	List<HibernateUser> findAllAliveUsers();
 
-
 	/**
 	 * Find user by login
 	 *
@@ -35,6 +34,12 @@ public interface UserRepository extends CrudRepository<HibernateUser, Long>,
 	 * @return HibernateUser
 	 */
 	HibernateUser findByLoginEquals(String login);
+
+	/**
+	 *
+	 */
+
+//	select * from m_roles role where role.id in (select role_id from l_user_roles where user_id = :user_id
 
 	//Метод не нужен..  ну может быть пока. Вписан, чтобы не потерялась учебная информация.
 	@Query("update HibernateUser u set u.name = :username")

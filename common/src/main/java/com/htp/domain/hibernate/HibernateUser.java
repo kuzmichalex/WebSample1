@@ -56,5 +56,4 @@ public class HibernateUser implements Serializable {
 	@OneToMany(mappedBy = "userFounder", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private Set<HibernateGroup> createdGroups = Collections.emptySet();
 
-
 }

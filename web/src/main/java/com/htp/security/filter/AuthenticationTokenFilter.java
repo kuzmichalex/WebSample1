@@ -48,7 +48,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 			try {
 				userNameFromToken = tokenUtils.getUserNameFromToken(authToken);
 			} catch (JwtException e) {
-				doErrorJsonRequest(res, "Hacker attack detected! invalid JWT token: " + e.getMessage());
+				doErrorJsonResponse(res, "Hacker attack detected! invalid JWT token: " + e.getMessage());
 				return;
 			}
 			try {
@@ -65,7 +65,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 					}
 				}
 			} catch (Exception e) {
-				doErrorJsonRequest(res, "Hacker attack detected! Invalid JWT auth: " + e.getMessage());
+				doErrorJsonResponse(res, "Hacker attack detected! Invalid JWT auth: " + e.getMessage());
 				return;
 			}
 
@@ -80,7 +80,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 	 * @param res     http response
 	 * @param message error description
 	 */
-	private void doErrorJsonRequest(ServletResponse res, String message) throws IOException {
+	private void doErrorJsonResponse(ServletResponse res, String message) throws IOException {
 		HttpServletResponse response = (HttpServletResponse) res;
 		response.setContentType("application/json");
 		response.getWriter().append("{\"errorCode\":\"00001\",\"message\":\"").append(message).append("\"}");
