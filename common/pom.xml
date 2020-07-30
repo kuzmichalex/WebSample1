@@ -81,6 +81,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-ehcache</artifactId>
+
         </dependency>
 
 
@@ -128,11 +129,11 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>junit</groupId>-->
+        <!--            <artifactId>junit</artifactId>-->
+        <!--            <version>4.12</version>-->
+        <!--        </dependency>-->
 
         <!--        Кэш-->
         <dependency>
@@ -147,12 +148,5 @@
             <version>6.5.2</version>
         </dependency>
 
-
-        <!--        Миграция БД-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.flywaydb</groupId>-->
-        <!--            <artifactId>flyway-core</artifactId>-->
-        <!--            <version>6.5.2</version>-->
-        <!--        </dependency>-->
     </dependencies>
 </project>

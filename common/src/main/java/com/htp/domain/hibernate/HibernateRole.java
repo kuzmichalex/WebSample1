@@ -20,7 +20,7 @@ public class HibernateRole {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 
 	@Column(name = "role_name")
 	private String roleName;

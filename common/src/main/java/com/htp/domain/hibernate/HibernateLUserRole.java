@@ -15,13 +15,13 @@ public class HibernateLUserRole {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 
 	@Column(name = "user_id")
-	private long userId;
+	private Long userId;
 
 	@Column(name = "role_id")
-	private long roleId;
+	private Long roleId;
 
 	@Column(name = "is_deleted")
 	private boolean isDeleted;

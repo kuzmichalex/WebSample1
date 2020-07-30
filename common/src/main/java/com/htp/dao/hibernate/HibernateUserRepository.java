@@ -40,7 +40,7 @@ public class HibernateUserRepository implements HibernateUserDao {
 	public Optional<HibernateUser> findById(Long userId) {
 		try (Session session = sessionFactory.openSession()) {
 			final HibernateUser hibernateUser = session.find(HibernateUser.class, userId);
-			return Optional.of(hibernateUser);
+			return Optional.ofNullable(hibernateUser);
 		}
 	}
 
@@ -49,7 +49,7 @@ public class HibernateUserRepository implements HibernateUserDao {
 
 		try (Session session = sessionFactory.openSession()) {
 			final HibernateUser hibernateUser = session.find(HibernateUser.class, login);
-			return Optional.of(hibernateUser);
+			return Optional.ofNullable(hibernateUser);
 		}
 	}
 

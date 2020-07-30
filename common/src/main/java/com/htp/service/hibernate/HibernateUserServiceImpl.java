@@ -2,6 +2,7 @@ package com.htp.service.hibernate;
 
 import com.htp.dao.hibernate.HibernateUserDao;
 import com.htp.domain.hibernate.HibernateUser;
+import com.htp.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +24,11 @@ public class HibernateUserServiceImpl implements HibernateUserService {
 	}
 
 	@Override
-	public Optional<HibernateUser> findById(Long userId) {
-		return hibernateUserDao.findById(userId);
+	public HibernateUser findById(Long userId) {
+		final Optional<HibernateUser> byId = hibernateUserDao.findById(userId);
+		if (byId.isEmpty())
+			throw new EntityNotFoundException("User witch id = " + userId + "not found");
+		else return byId.get();
 	}
 
 	@Override

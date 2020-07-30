@@ -4,6 +4,7 @@ import com.htp.controller.request.UserCreateRequest;
 import com.htp.dao.springdata.RoleRepository;
 import com.htp.domain.hibernate.HibernateRole;
 import com.htp.domain.hibernate.HibernateUser;
+import com.htp.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -17,25 +18,19 @@ public class UserCreateRequestConverter extends UserRequestConverter<UserCreateR
 		this.roleRepository = roleRepository;
 	}
 
-
 	@Override
 	public HibernateUser convert(UserCreateRequest request) {
 
 		HibernateUser user = new HibernateUser();
-
-		//HibernateRole hibernateRole = Hi
-		//HashSet<HibernateUser> usersSet = new HashSet<>();
-		//usersSet.add(user);
-		final Optional<HibernateRole> role_user = roleRepository.findByRoleName("ROLE_USER");
-
-		HashSet roles = new HashSet<>();
-		roles.add(role_user.get());
-		user.setRoles(roles);
-
-		//user.getRoles().add(role_user.get());
-
-		//hibernateRole.setUsers(usersSet);
-		//user.setRoles(Collections.singleton(hibernateRole));
-		return doConvert(user, request);
+		final Optional<HibernateRole> role = roleRepository.findByRoleName("ROLE_USER");
+		if (role.isPresent()) {
+			HashSet<HibernateRole> roles = new HashSet<>();
+			roles.add(role.get());
+			user.setRoles(roles);
+			return doConvert(user, request);
+		}
+		;
+		throw new EntityNotFoundException("Can't create user :( No role");
 	}
+
 }

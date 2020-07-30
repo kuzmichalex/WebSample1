@@ -66,7 +66,7 @@ public class SpringBootStarterApplication {
 		factoryBean.setPackagesToScan(SCAN_PACHAGES);
 		factoryBean.setDataSource(dataSource);
 		factoryBean.setAnnotatedPackages(SCAN_PACHAGES);
-		factoryBean.setHibernateProperties(getAdditionalProperties());
+		//factoryBean.setHibernateProperties(getAdditionalProperties());
 		factoryBean.afterPropertiesSet();
 		return factoryBean.getObject();
 	}

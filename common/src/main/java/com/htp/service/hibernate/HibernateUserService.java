@@ -9,9 +9,9 @@ import java.util.Optional;
 public interface HibernateUserService {
 	List<HibernateUser> findAll(int pageNum, int pageSize);
 
-	Optional<HibernateUser> findById(Long userId);
-
 	Optional<HibernateUser> findByLogin(String login);
+
+	HibernateUser findById(Long userId);
 
 	HibernateUser findOne(Long userId);
 

@@ -15,6 +15,7 @@ public class MyPageServiceImpl implements MyPageService {
 	@Override
 	public ResponseEntity<MyPageInfo> getMyPage(HibernateUser user) {
 		final MyPageInfo build = MyPageInfo.builder().
+				user(user).
 				userName(user.getName()).build();
 		return new ResponseEntity<>(build, HttpStatus.OK);
 	}

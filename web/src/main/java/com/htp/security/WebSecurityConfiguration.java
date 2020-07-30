@@ -31,21 +31,26 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+	public static final String ADMIN = "ADMIN";
+	public static final String USER = "USER";
+	public static final String TRAINER = "TRAINER";
+
 	private final UserDetailsService userDetailsService;
 	private final TokenUtils tokenUtils;
 
+
 	public WebSecurityConfiguration(@Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService,
 	                                TokenUtils tokenUtils
-	                                ) {
+	) {
 		this.userDetailsService = userDetailsService;
 		this.tokenUtils = tokenUtils;
 	}
 
 	/* В контроллере аутентификации нам нужен AuthenticationManager. Получим его тут
-	* В контроллере нам нужно вызвать метод Authenticate, а сам AuthenticationManager скрыт.
-	* Этим бином мы перекладываем в спринг контекст - чтобы была возможность достучатсья.
-	* То есть сами бин AuthenticationManager - создан, а при помощи этого бина добываем доступ к нему.
-	* */
+	 * В контроллере нам нужно вызвать метод Authenticate, а сам AuthenticationManager скрыт.
+	 * Этим бином мы перекладываем в спринг контекст - чтобы была возможность достучатсья.
+	 * То есть сами бин AuthenticationManager - создан, а при помощи этого бина добываем доступ к нему.
+	 * */
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -54,9 +59,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
 	/* Этот бин нужен потому, что напрямую в фильтр заавтовайрить нельзя
-	* Поэтому здесь мы создаём AuthenticationTokenFilter */
+	 * Поэтому здесь мы создаём AuthenticationTokenFilter */
 	@Bean
-	public AuthenticationTokenFilter authenticationTokenFilterBean(AuthenticationManager authenticationManager){
+	public AuthenticationTokenFilter authenticationTokenFilterBean(AuthenticationManager authenticationManager) {
 		final AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter(tokenUtils, userDetailsService);
 		authenticationTokenFilter.setAuthenticationManager(authenticationManager);
 		return authenticationTokenFilter;
@@ -71,18 +76,21 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	/* здесь настраиваем правила для Access authorisation filter*/
 	/* Также есть возможность засекьюрить не просто урл, а контроллер или метод в контроллере
-	  при помощи аннотациии вроде @Secured("ADMIN") */
+	  при помощи аннотациии вроде @Secured("ADMIN")
+	  Сконфигурированные antMatchers будут проверяться Decision manager
+	  А для тех, кто в web.ignoring() будет применён пустой фильтр
+	   */
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.
 				csrf().disable().               //Выключаем проверку при кроссдоменном запросе
 				exceptionHandling().            //Включаем наш exception handler
 				and().
-				//sessionManagement() - информация о сессии. На не надо, тк информация о залогинивании мы храним в токене
+				//sessionManagement() - информация о сессии. Нам не надо, тк информация о залогинивании мы храним в токене
 						authorizeRequests().            //Указываем необходимость авторизировать все запросы
-				antMatchers("/admin/**").hasAnyRole("ADMIN").
-				antMatchers("/users/**").hasAnyRole("ADMIN", "USER").
-				antMatchers("/myPage/**").hasAnyRole("ADMIN", "USER", "TRAINER").
+				antMatchers("/admin/**").hasAnyRole(ADMIN).
+				antMatchers("/users/**").hasAnyRole(ADMIN).
+				antMatchers("/myPage/**").hasAnyRole(ADMIN, USER, TRAINER).
 
 				//Разрешённые всем URL
 						antMatchers("/role/**").permitAll().
@@ -92,7 +100,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				antMatchers("/registration/**").permitAll().
 				antMatchers("/statistics/**").permitAll().
 				antMatchers("/logout/**").permitAll().
-
 
 				//Сваггер
 						antMatchers("/actuator/**").permitAll().

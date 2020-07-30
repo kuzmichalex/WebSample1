@@ -11,30 +11,30 @@
 package com.htp.domain.hibernate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.Collections;
 import java.util.Set;
+
 
 @Setter
 @Getter
 @RequiredArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = {"roles", "createdGroups"})
+@ToString(exclude = {"roles", "createdGroups"})
 @Entity
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "m_users")
-public class HibernateUser {
+@Cacheable
+public class HibernateUser implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 
 	@Column
 	private String login;
@@ -51,5 +51,10 @@ public class HibernateUser {
 	@ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonIgnoreProperties("users")
 	private Set<HibernateRole> roles = Collections.emptySet();
+
+	@JsonManagedReference
+	@OneToMany(mappedBy = "userFounder", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	private Set<HibernateGroup> createdGroups = Collections.emptySet();
+
 
 }

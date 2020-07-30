@@ -81,11 +81,11 @@ public class DefaultExceptionHandler {
 		return new ResponseEntity<>(new ErrorMessage(2002L, e.getLocalizedMessage()), HttpStatus.UNAUTHORIZED);
 	}
 
-	/*Пытаемся записать дубликаты по ключу*/
+	/*Попытка сохранить дубль*/
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public ResponseEntity<ErrorMessage> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
 		log.error(e.getMessage(), e);
-		return new ResponseEntity<>(new ErrorMessage(9000L, e.getLocalizedMessage()), HttpStatus.UNAUTHORIZED);
+		return new ResponseEntity<>(new ErrorMessage(9000L, e.getLocalizedMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
 	}
 
 	/*Ничего не нашли*/

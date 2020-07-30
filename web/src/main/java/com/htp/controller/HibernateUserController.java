@@ -54,14 +54,14 @@ public class HibernateUserController {
 	})
 	@GetMapping("/{id}")
 	public ResponseEntity<HibernateUser> getUserById(@PathVariable Long id) {
-		return new ResponseEntity<>(hibernateUserService.findOne(id), HttpStatus.OK);
+		return new ResponseEntity<>(hibernateUserService.findById(id), HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Create user")
 	@ApiResponses({
 			@ApiResponse(code = 201, message = "Successful creation user"),
 			@ApiResponse(code = 422, message = "Failed user creation properties validation"),
-			@ApiResponse(code = 500, message = "Server error, something wrong")
+			@ApiResponse(code = 500, message = "Server error")
 	})
 	@PostMapping
 	public HibernateUser create(@Valid @RequestBody UserCreateRequest createRequest) {
