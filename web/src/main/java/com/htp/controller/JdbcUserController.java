@@ -21,10 +21,10 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequestMapping("/users")
-public class UserController {
+public class JdbcUserController {
 	private final UserService userService;
 
-	public UserController(UserService userService) {
+	public JdbcUserController(UserService userService) {
 		this.userService = userService;
 	}
 

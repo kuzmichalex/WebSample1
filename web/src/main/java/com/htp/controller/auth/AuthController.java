@@ -4,9 +4,9 @@ package com.htp.controller.auth;
 import com.htp.controller.request.AuthRequest;
 import com.htp.controller.request.AuthResponse;
 import com.htp.controller.request.UserCreateRequest;
-import com.htp.domain.User;
+import com.htp.domain.hibernate.HibernateUser;
 import com.htp.security.util.TokenUtils;
-import com.htp.service.UserService;
+import com.htp.service.springdata.SpringDataUserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -38,11 +38,11 @@ public class AuthController {
 	/* Наша имплементация UserDetailService */
 	private final UserDetailsService userDetailsService;
 
-	private final UserService userService;
+	private final SpringDataUserService userService;
 
 	public AuthController(TokenUtils tokenUtils, AuthenticationManager authenticationManager,
 	                      @Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService,
-	                      UserService userService) {
+	                      SpringDataUserService userService) {
 		this.tokenUtils = tokenUtils;
 		this.authenticationManager = authenticationManager;
 		this.userDetailsService = userDetailsService;
@@ -89,13 +89,13 @@ public class AuthController {
 	})
 	//@ApiImplicitParams не нужен; параметры передаются в body
 	@PostMapping("/registration")
-	public User register(@Valid @RequestBody UserCreateRequest createRequest) {
+	public HibernateUser register(@Valid @RequestBody UserCreateRequest createRequest) {
 
-		User user = new User();
+		HibernateUser user = new HibernateUser();
 		user.setLogin(createRequest.getLogin());
 		user.setName(createRequest.getName());
 		user.setBirthDate(createRequest.getBirthDate());
 		user.setPassword(createRequest.getPassword());
-		return userService.save(user);
+		return userService.save(user).get();
 	}
 }

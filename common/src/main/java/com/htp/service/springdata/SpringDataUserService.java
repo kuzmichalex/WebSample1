@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface SpringDataUserService {
 	Optional<HibernateUser> findByLogin(String login);
 
+	Optional<HibernateUser> save(HibernateUser user);
+
 }

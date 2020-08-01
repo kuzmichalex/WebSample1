@@ -2,10 +2,9 @@
 
 package com.htp.security.service;
 
-import com.htp.dao.jdbctemplate.RoleDao;
-import com.htp.dao.jdbctemplate.UserDao;
-import com.htp.domain.Role;
-import com.htp.domain.User;
+import com.htp.dao.springdata.UserRepository;
+import com.htp.domain.hibernate.HibernateRole;
+import com.htp.domain.hibernate.HibernateUser;
 import com.htp.exceptions.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -13,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -26,23 +24,20 @@ import java.util.stream.Collectors;
 @Qualifier("userDetailServiceImpl")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-	private final UserDao userRepository;
-	private final RoleDao roleRepository;
+	private final UserRepository userRepository;
 
-	public UserDetailsServiceImpl(UserDao userRepository, RoleDao roleRepository) {
+	public UserDetailsServiceImpl(UserRepository userRepository) {
 		this.userRepository = userRepository;
-		this.roleRepository = roleRepository;
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String userLogin)  {
+	public UserDetails loadUserByUsername(String userLogin) {
 
-		final Optional<User> byLogin = userRepository.findByLogin(userLogin);
-		if (byLogin.isEmpty()) throw new EntityNotFoundException("User witch login " + userLogin + " not found");
+		final Optional<HibernateUser> hibernateUser = userRepository.findByLoginEquals(userLogin);
+		if (hibernateUser.isEmpty()) throw new EntityNotFoundException("User witch login " + userLogin + " not found");
+		HibernateUser user = hibernateUser.get();
+		final String authorities = user.getRoles().stream().map(HibernateRole::getRoleName).collect(Collectors.joining(","));
 
-		final User user = byLogin.get();
-		final List<Role> rolesByUser = roleRepository.findRolesByUser(user.getId());
-		final String authorities = rolesByUser.stream().map(Role::getRoleName).collect(Collectors.joining(","));
 		return new org.springframework.security.core.userdetails.User(
 				user.getLogin(),
 				user.getPassword(),

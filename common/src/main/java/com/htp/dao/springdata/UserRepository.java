@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<HibernateUser, Long>,
 		JpaRepository<HibernateUser, Long>,
@@ -33,11 +34,9 @@ public interface UserRepository extends CrudRepository<HibernateUser, Long>,
 	 * @param login user login
 	 * @return HibernateUser
 	 */
-	HibernateUser findByLoginEquals(String login);
+	Optional<HibernateUser> findByLoginEquals(String login);
 
-	/**
-	 *
-	 */
+//	Optional<HibernateUser> save(HibernateUser user);
 
 //	select * from m_roles role where role.id in (select role_id from l_user_roles where user_id = :user_id
 

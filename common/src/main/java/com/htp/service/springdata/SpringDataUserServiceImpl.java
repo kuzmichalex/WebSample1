@@ -18,9 +18,14 @@ public class SpringDataUserServiceImpl implements SpringDataUserService {
 	@Override
 	public Optional<HibernateUser> findByLogin(String login) {
 		try {
-			return Optional.ofNullable(userRepository.findByLoginEquals(login));
+			return userRepository.findByLoginEquals(login);
 		} catch (NoSuchElementException e) {
 			return Optional.empty();
 		}
+	}
+
+	@Override
+	public Optional<HibernateUser> save(HibernateUser user) {
+		return Optional.of(userRepository.save(user));
 	}
 }

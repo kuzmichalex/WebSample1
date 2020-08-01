@@ -16,10 +16,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/role")
-public class RoleController {
+public class JdbcRoleController {
 	private final RoleService roleService;
 
-	public RoleController(RoleService roleService) {
+	public JdbcRoleController(RoleService roleService) {
 		this.roleService = roleService;
 	}
 

@@ -3,6 +3,7 @@ package com.htp.controller;
 import com.htp.controller.request.UserCreateRequest;
 import com.htp.dao.springdata.UserRepository;
 import com.htp.domain.hibernate.HibernateUser;
+import com.htp.exceptions.EntityNotFoundException;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
@@ -15,6 +16,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.sql.SQLException;
+import java.util.Optional;
 
 
 @Slf4j
@@ -57,7 +59,8 @@ public class SpringDataUserController {
 	})
 	@GetMapping("/{login}")
 	public ResponseEntity<HibernateUser> getUserById(@PathVariable String login) {
-		return new ResponseEntity<>(userRepository.findByLoginEquals(login), HttpStatus.OK);
+		final Optional<HibernateUser> user = userRepository.findByLoginEquals(login);
+		return new ResponseEntity<>(user.orElseThrow(EntityNotFoundException::new), HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "Create user")
