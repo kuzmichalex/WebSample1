@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -32,11 +33,14 @@ public class HibernateTrainingController {
 			@ApiResponse(code = 400, message = "Bad request"),
 			@ApiResponse(code = 500, message = "Server error")
 	})
-	/*@ApiImplicitParams({
-			@ApiImplicitParam(name = "page", value = "page size", example = "10", required = true, dataType = "int", paramType = "path")
-	})*/
+//	@ApiImplicitParams({
+//			@ApiImplicitParam(name = "name", value = "Training name", example = "Swimming", required = true, dataType = "String", paramType = "path"),
+//			@ApiImplicitParam(name = "feature", value = "Training feature", example = "Anaerobic", required = true, dataType = "String", paramType = "path")
+//	})
 	@GetMapping
-	public ResponseEntity<List<HibernateTraining>> findByCriteria() {
+	public ResponseEntity<List<HibernateTraining>> findByCriteria(
+			@RequestParam(value = "name") String name,
+			@RequestParam(value = "features") String[] features) {
 		return new ResponseEntity<>(hibernateTrainingRepository.criteriaFind(), HttpStatus.OK);
 	}
 }

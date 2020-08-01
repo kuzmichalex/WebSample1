@@ -13,10 +13,8 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository("hibernateTrainingRepository")
@@ -51,26 +49,26 @@ public class HibernateTrainingRepositoryImpl implements HibernateTrainingReposit
 
 	@Override
 	public List<HibernateTraining> criteriaFind() {
-
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder(); //create query and query parts
-		CriteriaQuery<HibernateTraining> query = cb.createQuery(HibernateTraining.class);
 
-		final Root<HibernateTraining> root = query.from(HibernateTraining.class);
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder(); //create query and query parts
+		CriteriaQuery<HibernateTraining> cq = cb.createQuery(HibernateTraining.class);
+
+		final Root<HibernateTraining> root = cq.from(HibernateTraining.class);
 		Join<HibernateTraining, HibernateFeature> join = root.join(HibernateTraining_.features);
 
+		final Predicate trainingNameLike = cb.like(root.get(HibernateTraining_.name), "%Ice%");
 
-		query.select(root)
-				.distinct(true)
-				.where(
-						cb.and(
-								cb.like(root.get(HibernateTraining_.name), "%%"),
-								cb.like(join.get(HibernateFeature_.name), "%Cha%")
-						)
-				)
-				.orderBy(cb.asc(root.get(HibernateTraining_.NAME)));
-		TypedQuery<HibernateTraining> findQuery = entityManager.createQuery(query);
-		return findQuery.getResultList();
+		List<Predicate> orFeatures = new ArrayList<>();
+		orFeatures.add(cb.or(cb.like(join.get(HibernateFeature_.name), "%%")));
+
+		cq.select(root).
+				distinct(true).
+				where(trainingNameLike,
+						cb.and(orFeatures.toArray(new Predicate[0]))
+				);
+		final TypedQuery<HibernateTraining> query = entityManager.createQuery(cq);
+		return query.getResultList();
 	}
 
 	@Override
