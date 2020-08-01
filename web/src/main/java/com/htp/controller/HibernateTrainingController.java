@@ -2,9 +2,7 @@ package com.htp.controller;
 
 import com.htp.dao.hibernate.HibernateTrainingRepository;
 import com.htp.domain.hibernate.HibernateTraining;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/hibernate/trainings")
@@ -33,14 +32,14 @@ public class HibernateTrainingController {
 			@ApiResponse(code = 400, message = "Bad request"),
 			@ApiResponse(code = 500, message = "Server error")
 	})
-//	@ApiImplicitParams({
-//			@ApiImplicitParam(name = "name", value = "Training name", example = "Swimming", required = true, dataType = "String", paramType = "path"),
-//			@ApiImplicitParam(name = "feature", value = "Training feature", example = "Anaerobic", required = true, dataType = "String", paramType = "path")
-//	})
+	@ApiImplicitParams({
+			//	@ApiImplicitParam(name = "Tname", value = "Training name", example = "Running", required = true, dataType = "string", paramType = "path"),
+			@ApiImplicitParam(name = "Feature", value = "Training feature", example = "Aerobic", required = false, dataType = "string", allowMultiple = true, paramType = "query")
+	})
 	@GetMapping
 	public ResponseEntity<List<HibernateTraining>> findByCriteria(
-			@RequestParam(value = "name") String name,
-			@RequestParam(value = "features") String[] features) {
+			@RequestParam(value = "Name") Optional<String> name,
+			@RequestParam(value = "Feature") Optional<String[]> feature) {
 		return new ResponseEntity<>(hibernateTrainingRepository.criteriaFind(), HttpStatus.OK);
 	}
 }
