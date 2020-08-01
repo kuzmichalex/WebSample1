@@ -1,6 +1,6 @@
 package com.htp.service.hibernate;
 
-import com.htp.dao.hibernate.HibernateUserDao;
+import com.htp.dao.hibernate.HibernateUserRepository;
 import com.htp.domain.hibernate.HibernateUser;
 import com.htp.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -11,21 +11,20 @@ import java.util.Optional;
 @Service
 public class HibernateUserServiceImpl implements HibernateUserService {
 
-	private final HibernateUserDao hibernateUserDao;
+	private final HibernateUserRepository userRepository;
 
-	public HibernateUserServiceImpl(HibernateUserDao hibernateUserDao) {
-		this.hibernateUserDao = hibernateUserDao;
+	public HibernateUserServiceImpl(HibernateUserRepository userRepository) {
+		this.userRepository = userRepository;
 	}
-
 
 	@Override
 	public List<HibernateUser> findAll(int pageNum, int pageSize) {
-		return hibernateUserDao.findAll(pageNum, pageSize);
+		return userRepository.findAll(pageNum, pageSize);
 	}
 
 	@Override
 	public HibernateUser findById(Long userId) {
-		final Optional<HibernateUser> byId = hibernateUserDao.findById(userId);
+		final Optional<HibernateUser> byId = userRepository.findById(userId);
 		if (byId.isEmpty())
 			throw new EntityNotFoundException("User witch id = " + userId + "not found");
 		else return byId.get();
@@ -33,26 +32,26 @@ public class HibernateUserServiceImpl implements HibernateUserService {
 
 	@Override
 	public Optional<HibernateUser> findByLogin(String login) {
-		return hibernateUserDao.findByLogin(login);
+		return userRepository.findByLogin(login);
 	}
 
 	@Override
 	public HibernateUser findOne(Long userId) {
-		return hibernateUserDao.findOne(userId);
+		return userRepository.findOne(userId);
 	}
 
 	@Override
 	public HibernateUser save(HibernateUser user) {
-		return hibernateUserDao.save(user);
+		return userRepository.save(user);
 	}
 
 	@Override
 	public HibernateUser update(HibernateUser user) {
-		return hibernateUserDao.save(user);
+		return userRepository.save(user);
 	}
 
 	@Override
 	public int delete(HibernateUser user) {
-		return hibernateUserDao.delete(user);
+		return userRepository.delete(user);
 	}
 }

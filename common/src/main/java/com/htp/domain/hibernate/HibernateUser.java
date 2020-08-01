@@ -25,8 +25,8 @@ import java.util.Set;
 @Getter
 @RequiredArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"roles", "createdGroups"})
-@ToString(exclude = {"roles", "createdGroups"})
+@EqualsAndHashCode(exclude = {"roles", "createdGroups", "createdTrainings"})
+@ToString(exclude = {"roles", "createdGroups", "createdTrainings"})
 @Entity
 @Table(name = "m_users")
 @Cacheable
@@ -55,5 +55,10 @@ public class HibernateUser implements Serializable {
 	@JsonManagedReference
 	@OneToMany(mappedBy = "userFounder", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private Set<HibernateGroup> createdGroups = Collections.emptySet();
+
+	@JsonManagedReference
+	@OneToMany(mappedBy = "userAuthor", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	private Set<HibernateTraining> createdTrainings = Collections.emptySet();
+
 
 }

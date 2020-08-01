@@ -95,6 +95,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				//Разрешённые всем URL
 						antMatchers("/role/**").permitAll().
 				antMatchers("/hibernate/users/**").permitAll().
+				antMatchers("/hibernate/trainings/**").permitAll().
 				antMatchers("/springData/**").permitAll().
 				antMatchers("/auth/**").permitAll().
 				antMatchers("/registration/**").permitAll().

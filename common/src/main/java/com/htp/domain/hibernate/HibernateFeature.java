@@ -1,8 +1,10 @@
 package com.htp.domain.hibernate;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Collections;
@@ -12,12 +14,10 @@ import java.util.Set;
 @Getter
 @RequiredArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"features"})
-@ToString(exclude = {"features"})
-
 @Entity
-@Table(name = "m_trainings")
-public class HibernateTraining {
+@Table(name = "m_features")
+public class HibernateFeature {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -31,13 +31,14 @@ public class HibernateTraining {
 	@Column(name = "is_deleted")
 	private boolean isDeleted;
 
-	@JsonBackReference
-	@ManyToOne
-	@JoinColumn(name = "author_user_id", nullable = false)
-	private HibernateUser userAuthor;
-
-	@ManyToMany(mappedBy = "trainings", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany
+	@JoinTable(
+			name = "l_training_features",
+			joinColumns = {@JoinColumn(name = "feature_id")},
+			inverseJoinColumns = {@JoinColumn(name = "training_id")}
+	)
 	@JsonIgnoreProperties("trainings")
-	private Set<HibernateFeature> features = Collections.emptySet();
+	private Set<HibernateTraining> trainings = Collections.emptySet();
+
 
 }

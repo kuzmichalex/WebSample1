@@ -12,7 +12,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "m_roles")
-//@NoArgsConstructor
 @RequiredArgsConstructor
 @Getter
 @Setter
