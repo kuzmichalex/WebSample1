@@ -1,6 +1,6 @@
 package com.htp.controller.response;
 
-import com.htp.domain.Activity;
+import com.htp.domain.hibernate.HibernateActivity;
 import com.htp.domain.hibernate.HibernateGroup;
 import com.htp.domain.hibernate.HibernateUser;
 import lombok.Builder;
@@ -14,5 +14,5 @@ public class MyPageInfo {
 	private String userName;
 	private HibernateUser user;
 	private List<HibernateGroup> Groups;
-	private List<Activity> Activity;
+	private List<HibernateActivity> Activity;
 }

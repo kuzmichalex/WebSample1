@@ -1,6 +1,7 @@
 package com.htp.service;
 
 import com.htp.controller.response.MyPageInfo;
+import com.htp.dao.springdata.ActivityRepository;
 import com.htp.dao.springdata.GroupRepository;
 import com.htp.dao.springdata.UserLinkToGroupRepository;
 import com.htp.domain.hibernate.HibernateGroup;
@@ -17,10 +18,12 @@ import java.util.Optional;
 public class MyPageServiceImpl implements MyPageService {
 	private final GroupRepository groupRepository;
 	private final UserLinkToGroupRepository linkToGroupRepository;
+	private final ActivityRepository activityRepository;
 
-	public MyPageServiceImpl(GroupRepository groupRepository, UserLinkToGroupRepository linkToGroupRepository) {
+	public MyPageServiceImpl(GroupRepository groupRepository, UserLinkToGroupRepository linkToGroupRepository, ActivityRepository activityRepository) {
 		this.groupRepository = groupRepository;
 		this.linkToGroupRepository = linkToGroupRepository;
+		this.activityRepository = activityRepository;
 	}
 
 	private java.sql.Date generateCurrentDate() {
@@ -38,7 +41,9 @@ public class MyPageServiceImpl implements MyPageService {
 		final MyPageInfo build = MyPageInfo.builder().
 				user(user).
 				Groups(groupRepository.findAllUserGroups(user.getId())).
-				userName(user.getName()).build();
+				userName(user.getName()).
+				Activity(activityRepository.findAllByUser(user.getId())).
+				build();
 		return new ResponseEntity<>(build, HttpStatus.OK);
 	}
 
@@ -80,6 +85,11 @@ public class MyPageServiceImpl implements MyPageService {
 				linkToGroupRepository.save(userLinkToGroup.get());
 			}
 		}
+	}
+
+	@Override
+	public void addToActivity(HibernateUser user, Long training) {
+
 	}
 
 

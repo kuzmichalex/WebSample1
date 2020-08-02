@@ -80,4 +80,22 @@ public class MyPageController {
 		myPageService.leaveGroup(user, group);
 		return myPageService.getMyPage(user);
 	}
+
+	@ApiOperation(value = "Add training to my plans") //Наименование в документации
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Ok"),              //Сообщение об успешном поиске
+			@ApiResponse(code = 500, message = "Server upal") //Сообщение, что всё плохо
+	})
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header"),
+			@ApiImplicitParam(name = "group", value = "group ID", example = "1", defaultValue = "1", dataType = "int", paramType = "query"),
+	})
+
+	@PutMapping("/addToActivity")
+	public ResponseEntity<MyPageInfo> addToActivity(@ApiIgnore Principal principal, Long training) {
+		final HibernateUser user = getUserFromPrincipal(principal);
+		myPageService.addToActivity(user, training);
+		return myPageService.getMyPage(user);
+	}
+
 }

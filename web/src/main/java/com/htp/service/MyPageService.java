@@ -11,4 +11,5 @@ public interface MyPageService {
 
 	void leaveGroup(HibernateUser hibernateUser, Long groupId);
 
+	void addToActivity(HibernateUser user, Long training);
 }
