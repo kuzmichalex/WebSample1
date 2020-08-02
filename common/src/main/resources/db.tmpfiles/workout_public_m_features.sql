@@ -12,3 +12,5 @@ INSERT INTO public.m_features (id, description, name, is_deleted)
 VALUES (6, 'Game', 'Game', false);
 INSERT INTO public.m_features (id, description, name, is_deleted)
 VALUES (7, 'Relax', 'Relax', false);
+INSERT INTO public.m_features (id, description, name, is_deleted)
+VALUES (8, 'Challenge', 'Challenge', false);

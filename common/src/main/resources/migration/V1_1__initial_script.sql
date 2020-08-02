@@ -81,14 +81,15 @@ create unique index m_training_features_description_uindex
 
 create table m_trainings
 (
-    id             bigserial    not null
+    id             bigserial             not null
         constraint m_trainings_pk
             primary key,
-    name           varchar(100) not null,
-    description    varchar(200) not null,
-    author_user_id bigint       not null
+    name           varchar(100)          not null,
+    description    varchar(200)          not null,
+    author_user_id bigint                not null
         constraint m_trainings_m_users_id_fk
-            references m_users
+            references m_users,
+    is_deleted     boolean default false not null
 );
 
 alter table m_trainings
@@ -159,6 +160,9 @@ alter table m_groups
 
 create unique index m_groups_id_uindex
     on m_groups (id);
+
+create unique index m_groups_name_uindex
+    on m_groups (name);
 
 create table m_levels
 (

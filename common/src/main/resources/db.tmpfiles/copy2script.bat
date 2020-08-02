@@ -42,4 +42,4 @@ type workout_public_l_training_levels.sql
 echo.>>result.sql
 type workout_public_l_user_groups.sql >>result.sql
 
-copy result.sql ..\migration\V1_3__dump.sql
+copy result.sql ..\migration\V1_9199__dump.sql
