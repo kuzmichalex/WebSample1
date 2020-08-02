@@ -88,9 +88,8 @@ public class MyPageController {
 	})
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header"),
-			@ApiImplicitParam(name = "group", value = "group ID", example = "1", defaultValue = "1", dataType = "int", paramType = "query"),
+			@ApiImplicitParam(name = "training", value = "training ID", example = "1", defaultValue = "1", dataType = "int", paramType = "query"),
 	})
-
 	@PutMapping("/addToActivity")
 	public ResponseEntity<MyPageInfo> addToActivity(@ApiIgnore Principal principal, Long training) {
 		final HibernateUser user = getUserFromPrincipal(principal);
