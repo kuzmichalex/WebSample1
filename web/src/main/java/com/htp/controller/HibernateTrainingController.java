@@ -25,21 +25,20 @@ public class HibernateTrainingController {
 		this.hibernateTrainingRepository = hibernateTrainingRepository;
 	}
 
-
-	@ApiOperation(value = "Finding trainings CB test")
+	@ApiOperation(value = "Finding trainings using criteria builder")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success"),
 			@ApiResponse(code = 400, message = "Bad request"),
 			@ApiResponse(code = 500, message = "Server error")
 	})
 	@ApiImplicitParams({
-			//	@ApiImplicitParam(name = "Tname", value = "Training name", example = "Running", required = true, dataType = "string", paramType = "path"),
-			@ApiImplicitParam(name = "Feature", value = "Training feature", example = "Aerobic", required = false, dataType = "string", allowMultiple = true, paramType = "query")
+			@ApiImplicitParam(name = "Name", value = "Training name", example = "%", dataType = "String", paramType = "query"),
+			@ApiImplicitParam(name = "Feature", value = "Training feature", example = "%", dataType = "String", allowMultiple = true, paramType = "query")
 	})
 	@GetMapping
 	public ResponseEntity<List<HibernateTraining>> findByCriteria(
-			@RequestParam(value = "Name") Optional<String> name,
-			@RequestParam(value = "Feature") Optional<String[]> feature) {
-		return new ResponseEntity<>(hibernateTrainingRepository.criteriaFind(), HttpStatus.OK);
+			@RequestParam(value = "Name") String name,
+			@RequestParam(value = "Feature") String[] feature) {
+		return new ResponseEntity<>(hibernateTrainingRepository.criteriaFind(Optional.ofNullable(name), Optional.ofNullable(feature)), HttpStatus.OK);
 	}
 }

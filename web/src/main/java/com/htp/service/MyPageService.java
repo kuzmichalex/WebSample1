@@ -6,4 +6,9 @@ import org.springframework.http.ResponseEntity;
 
 public interface MyPageService {
 	ResponseEntity<MyPageInfo> getMyPage(HibernateUser user);
+
+	void enterGroup(HibernateUser hibernateUser, Long groupId);
+
+	void leaveGroup(HibernateUser hibernateUser, Long groupId);
+
 }
