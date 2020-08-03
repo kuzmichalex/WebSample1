@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
 
@@ -12,10 +13,12 @@ import java.util.Set;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Data
+@EqualsAndHashCode(exclude = {"activities"})
+@ToString(exclude = {"activities"})
 @Entity
 @Table(name = "m_activity_state")
-public class HibernateState {
+@Cacheable
+public class HibernateTrainingState implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

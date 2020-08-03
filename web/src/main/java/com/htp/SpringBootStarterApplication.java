@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
 		SwaggerConfig.class
 })
 public class SpringBootStarterApplication {
-	private static final String SCAN_PACHAGES = "com.htp";
+	private static final String SCAN_PACKAGES = "com.htp";
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootStarterApplication.class, args);
@@ -63,9 +63,9 @@ public class SpringBootStarterApplication {
 		LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
 
 		// Package contain entity classes
-		factoryBean.setPackagesToScan(SCAN_PACHAGES);
+		factoryBean.setPackagesToScan(SCAN_PACKAGES);
 		factoryBean.setDataSource(dataSource);
-		factoryBean.setAnnotatedPackages(SCAN_PACHAGES);
+		factoryBean.setAnnotatedPackages(SCAN_PACKAGES);
 		//factoryBean.setHibernateProperties(getAdditionalProperties());
 		factoryBean.afterPropertiesSet();
 		return factoryBean.getObject();
@@ -79,7 +79,7 @@ public class SpringBootStarterApplication {
 		LocalContainerEntityManagerFactoryBean em
 				= new LocalContainerEntityManagerFactoryBean();
 		em.setDataSource(dataSource);
-		em.setPackagesToScan(SCAN_PACHAGES);
+		em.setPackagesToScan(SCAN_PACKAGES);
 
 		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		em.setJpaVendorAdapter(vendorAdapter);

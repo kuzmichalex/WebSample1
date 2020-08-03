@@ -1,12 +1,8 @@
 package com.htp.service;
 
 import com.htp.controller.response.MyPageInfo;
-import com.htp.dao.springdata.ActivityRepository;
-import com.htp.dao.springdata.GroupRepository;
-import com.htp.dao.springdata.UserLinkToGroupRepository;
-import com.htp.domain.hibernate.HibernateGroup;
-import com.htp.domain.hibernate.HibernateUser;
-import com.htp.domain.hibernate.HibernateUserLinkGroup;
+import com.htp.dao.springdata.*;
+import com.htp.domain.hibernate.*;
 import com.htp.exceptions.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +15,21 @@ public class MyPageServiceImpl implements MyPageService {
 	private final GroupRepository groupRepository;
 	private final UserLinkToGroupRepository linkToGroupRepository;
 	private final ActivityRepository activityRepository;
+	private final TrainingRepository trainingRepository;
+	private final TrainingStateRepository stateRepository;
 
-	public MyPageServiceImpl(GroupRepository groupRepository, UserLinkToGroupRepository linkToGroupRepository, ActivityRepository activityRepository) {
+	public MyPageServiceImpl(GroupRepository groupRepository,
+	                         UserLinkToGroupRepository linkToGroupRepository,
+	                         ActivityRepository activityRepository,
+	                         TrainingRepository trainingRepository,
+	                         TrainingStateRepository stateRepository) {
 		this.groupRepository = groupRepository;
 		this.linkToGroupRepository = linkToGroupRepository;
 		this.activityRepository = activityRepository;
+		this.trainingRepository = trainingRepository;
+		this.stateRepository = stateRepository;
 	}
+
 
 	private java.sql.Date generateCurrentDate() {
 		return new java.sql.Date(new java.util.Date().getTime());
@@ -72,6 +77,9 @@ public class MyPageServiceImpl implements MyPageService {
 		}
 	}
 
+	/**
+	 * Add some training to plans
+	 */
 	@Override
 	public void leaveGroup(HibernateUser user, Long groupId) {
 		final HibernateGroup group = groupRepository.findById(groupId).orElseThrow(EntityNotFoundException::new);
@@ -88,8 +96,15 @@ public class MyPageServiceImpl implements MyPageService {
 	}
 
 	@Override
-	public void addToActivity(HibernateUser user, Long training) {
-
+	public void addToActivity(HibernateUser user, Long trainingId) {
+		final HibernateTraining training = trainingRepository.findById(trainingId).orElseThrow(EntityNotFoundException::new);
+		final HibernateTrainingState state = stateRepository.findPlannedState().orElseThrow(EntityNotFoundException::new);
+		HibernateActivity activity = new HibernateActivity();
+		activity.setUserId(user.getId());
+		activity.setLevelId(1L);
+		activity.setStateId(state);
+		activity.setTrainingId(training.getId());
+		activityRepository.save(activity);
 	}
 
 

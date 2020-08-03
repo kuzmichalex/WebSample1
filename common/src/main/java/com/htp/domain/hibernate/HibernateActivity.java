@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Date;
 
 @Setter
@@ -11,10 +12,12 @@ import java.sql.Date;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Data
+@EqualsAndHashCode(exclude = {"stateId"})
+@ToString(exclude = {"stateId"})
 @Entity
 @Table(name = "m_activity")
-public class HibernateActivity {
+@Cacheable
+public class HibernateActivity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -37,7 +40,7 @@ public class HibernateActivity {
 	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "state_id", nullable = false)
-	private HibernateState stateId;
+	private HibernateTrainingState stateId;
 
 	@Column(name = "training_id")
 	private Long trainingId;
