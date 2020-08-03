@@ -66,7 +66,7 @@ public class SpringBootStarterApplication {
 		factoryBean.setPackagesToScan(SCAN_PACKAGES);
 		factoryBean.setDataSource(dataSource);
 		factoryBean.setAnnotatedPackages(SCAN_PACKAGES);
-		//factoryBean.setHibernateProperties(getAdditionalProperties());
+		factoryBean.setHibernateProperties(getAdditionalProperties());
 		factoryBean.afterPropertiesSet();
 		return factoryBean.getObject();
 	}
@@ -106,15 +106,15 @@ public class SpringBootStarterApplication {
 
 	@Bean
 	public CacheManager cacheManager() {
-		CaffeineCacheManager rolesCache = new CaffeineCacheManager("RolesCache");
+		CaffeineCacheManager rolesCache = new CaffeineCacheManager("RolesCache", "UsersCache", "StateCache");
 		rolesCache.setCaffeine(cacheProperties());
 		return rolesCache;
 	}
 
 	public Caffeine<Object, Object> cacheProperties() {
 		return Caffeine.newBuilder()
-				.initialCapacity(10)
-				.maximumSize(50)
+				.initialCapacity(50)
+				.maximumSize(150)
 				.expireAfterAccess(10, TimeUnit.MINUTES)
 				.weakKeys()
 				.recordStats();

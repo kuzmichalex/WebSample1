@@ -1,6 +1,8 @@
 package com.htp.dao.springdata;
 
 import com.htp.domain.hibernate.HibernateUser;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -9,6 +11,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import java.util.List;
 import java.util.Optional;
 
+@CacheConfig(cacheNames = {"UsersCache"})
 public interface UserRepository extends CrudRepository<HibernateUser, Long>,
 		JpaRepository<HibernateUser, Long>,
 		PagingAndSortingRepository<HibernateUser, Long> {
@@ -34,6 +37,7 @@ public interface UserRepository extends CrudRepository<HibernateUser, Long>,
 	 * @param login user login
 	 * @return HibernateUser
 	 */
+	@Cacheable
 	Optional<HibernateUser> findByLoginEquals(String login);
 
 //	Optional<HibernateUser> save(HibernateUser user);
